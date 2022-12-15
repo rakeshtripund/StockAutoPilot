@@ -1,0 +1,78 @@
+.header_section {
+    background-color: #FB525A;
+    color: red;
+    height: 70px;
+    margin-top: 10px;
+
+}
+
+/*SidePanel*/
+.sidepanel {
+    height: 100%;
+    width: 0;
+    position: fixed;
+    z-index: 1;
+    top: 0;
+    right: 0;
+    background-color: #fff;
+    overflow-x: hidden;
+    transition: 0.5s;
+    padding-top: 60px;
+    border: 1px solid gray;
+}
+
+.sidepanel .closebtn {
+    position: absolute;
+    top: 0;
+    right: 25px;
+    font-size: 25px;
+    text-decoration: none;
+    color: gray;
+    padding-top: 10px;
+}
+
+.sidepanel .panelTitle {
+    position: absolute;
+    top: 0;
+    font-size: 20px;
+    font-weight: bold;
+    padding: 10px 20px;
+}
+
+/*Form*/
+form .form-label {
+    float: right;
+}
+
+:host ::ng-deep .p-datatable .p-datatable-tbody>tr>td {
+    padding: 8px !important;
+}
+
+:host ::ng-deep .p-datatable .p-datatable-header {
+    padding: 4px !important;
+}
+
+:host ::ng-deep .p-datatable .p-datatable-thead>tr>th {
+    padding: 1px !important;
+}
+
+:host ::ng-deep .p-datatable .p-datatable-header {
+    background-color: #f79bb9;
+}
+
+:host ::ng-deep .p-button.p-button-icon-only.p-button-rounded {
+    height: 0px !important;
+}
+
+:host ::ng-deep .p-button.p-button-icon-only {
+    width: 35px !important;
+    height: 5px !important;
+}
+
+:host ::ng-deep .p-datatable .p-datatable-tbody>tr>td {
+    padding: 4px !important;
+}
+
+:host ::ng-deep .p-button.p-button-icon-only.p-button-rounded {
+    border-radius: 20% !important;
+}
