@@ -135,7 +135,7 @@ export class HomeComponent {
   getDataWithParams(url: string, parameters: HttpParams) {
     return this.http.get(url, { params: parameters });
   }
-
+  // code to post data
   postData(url: string, body: any) {
     return this.http.post(url, body);
   }
