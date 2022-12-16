@@ -18,6 +18,10 @@ export class HomeComponent {
   isOnView: boolean = false;
   switchButton: boolean = false;
   isOnEdit: boolean = false;
+  scriptData: any
+  symbolName: string = ""
+  symbol: string = ""
+
   constructor(private http: HttpClient) { }
 
   ngOnInit(): void {
@@ -27,6 +31,7 @@ export class HomeComponent {
     this.switchButton = false
     this.scripts = {}
     this.filter = []
+    this.scriptData = {}
     this.getAllScripts();
     this.list_stock_details = [
       {
@@ -80,6 +85,10 @@ export class HomeComponent {
     this.postData("http://127.0.0.1:5000/StartProgram", formdata).subscribe(data => {
       console.log(data);
     });
+    setTimeout(() => {
+      this.getAllScripts(),
+        500
+    })
 
   }
 
@@ -125,8 +134,22 @@ export class HomeComponent {
 
     }
   }
-  switchPlayPause() {
-    this.switchButton = !this.switchButton
+  updateStatus(id: any, status: any) {
+    let data = { scriptId: id, activeStatus: status }
+    this.postData("http://127.0.0.1:5000/UpdateActiveStatus", data).subscribe(response => {
+      console.log(response)
+    })
+    setTimeout(() => {
+      this.getAllScripts(),
+        500
+    })
+  }
+
+  getScriptById(id: any) {
+    this.getData(`http://127.0.0.1:5000/GetScriptById/${id}`).subscribe(data => {
+      this.scriptData = data
+    })
+    this.isOnView = true
   }
   getData(url: string,) {
     return this.http.get(url);
@@ -138,6 +161,9 @@ export class HomeComponent {
   // code to post data
   postData(url: string, body: any) {
     return this.http.post(url, body);
+  }
+  putData(url: string, body: any) {
+    return this.http.put(url, body);
   }
 
 }

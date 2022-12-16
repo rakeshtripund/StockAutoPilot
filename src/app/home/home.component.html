@@ -128,7 +128,7 @@
                                 <td>{{scripts.scriptName}}</td>
                                 <td>{{scripts.investmentBalance}}
                                 </td>
-                                <td>{{scripts.start_date | date: 'shortDate' }}
+                                <td>{{scripts.startDate | date: 'shortDate' }}
                                 </td>
                                 <td>
                                     {{scripts.buyMargin}}
@@ -148,8 +148,8 @@
                                 </td>
 
                                 <td style="width:4px ;">
-                                    <button pButton pRipple type="button" (click)="viewScriptById(1)" title="View"
-                                        icon="pi pi-eye" class="p-button-rounded "></button>
+                                    <button pButton pRipple type="button" (click)="getScriptById(scripts.id)"
+                                        title="View" icon="pi pi-eye" class="p-button-rounded "></button>
                                 </td>
                                 <td style="width:4px ;">
                                     <button pButton pRipple type="button" (click)="editScriptById(1)" title="Edit"
@@ -162,15 +162,14 @@
                                         class="p-button-rounded p-button-danger "></button>
                                 </td>
                                 <td style="width:4px ;"><button pButton pRipple type="button" title="Play"
-                                        icon="pi pi-play" class="p-button-rounded p-button-help " *ngIf="!switchButton"
-                                        (click)="switchPlayPause()" title="Play"></button>
+                                        icon="pi pi-play" class="p-button-rounded p-button-help "
+                                        *ngIf="scripts.activeFlag == 1" (click)="updateStatus(scripts.id, 0)"
+                                        title="Play"></button>
+                                    <button pButton pRipple type="button" title="Pause" icon="pi pi-pause"
+                                        class="p-button-rounded p-button-success " *ngIf="scripts.activeFlag == 0"
+                                        (click)="updateStatus(scripts.id, 1)" title="Pause"></button>
 
                                 </td>
-                                <td style="width:4px ;"><button pButton pRipple type="button" title="Pause"
-                                        icon="pi pi-pause" class="p-button-rounded p-button-success "
-                                        *ngIf="switchButton" (click)="switchPlayPause()" title="Pause"></button>
-                                </td>
-
 
                             </tr>
                         </ng-template>
@@ -374,7 +373,7 @@
                             <div class="col-lg-3 mb-1">
                                 <div class="form-floating text-muted fs-6">
                                     <input type="text" class="form-control" placeholder="Script Name" name="scriptName"
-                                        style="border-radius: 12px; height: 50px;" [(ngModel)]="scripts.scriptName"
+                                        style="border-radius: 12px; height: 50px;" [(ngModel)]="scriptData.scriptName"
                                         type="text" required disabled
                                         [ngClass]="{'is-invalid': (scriptForm.submitted && scriptName.invalid && !flag) || (scriptName.invalid && scriptName.touched && !flag) }">
 
@@ -386,7 +385,7 @@
                             <div class="col-lg-3 mb-1">
                                 <div class="form-floating text-muted fs-6">
                                     <input type="text" class="form-control" placeholder="Investment Amount"
-                                        [(ngModel)]="scripts.investmentAmount" name="investmentAmount"
+                                        [(ngModel)]="scriptData.investmentBalance" name="investmentBalance"
                                         style="border-radius: 12px; height: 50px;" disabled required pattern="[0-9]*"
                                         [ngClass]="{'is-invalid': (scriptForm.submitted && investmentAmount.invalid && !flag) || (investmentAmount.invalid && investmentAmount.touched && !flag) }">
 
@@ -399,7 +398,7 @@
                                 <div class="form-floating text-muted fs-6">
                                     <input type="text" class="form-control" placeholder="Buy Limit" name="buyMargin"
                                         style="border-radius: 12px; height: 50px;" required [disabled]="isOnView"
-                                        pattern="^(100|[1-9][0-9]?)$"
+                                        pattern="^(100|[1-9][0-9]?)$" [(ngModel)]="scriptData.buyMargin"
                                         [ngClass]="{'is-invalid': (scriptForm.submitted && buyMargin.invalid && !flag ) || (buyMargin.invalid && buyMargin.touched && !flag) }">
 
                                     <label for="Buy Limit" class="p-2">Buy Limit<span style="color: red;">
@@ -413,6 +412,7 @@
                                     <input type="text" class="form-control" placeholder="Sell Limit"
                                         #sellMargin="ngModel" name="sellMargin" [(ngModel)]="scripts.sellMargin"
                                         type="text" required pattern="^(100|[1-9][0-9]?)$" [disabled]="isOnView"
+                                        [(ngModel)]="scriptData.sellMargin"
                                         [ngClass]="{'is-invalid': (scriptForm.submitted && sellMargin.invalid && !flag ) || (sellMargin.invalid && sellMargin.touched && !flag) }"
                                         style="border-radius: 12px; height: 50px;">
 
