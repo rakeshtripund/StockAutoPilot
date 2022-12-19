@@ -19,8 +19,11 @@ export class HomeComponent {
   switchButton: boolean = false;
   isOnEdit: boolean = false;
   scriptData: any
+  scriptCodes: any
+  selectedScript: any
   symbolName: string = ""
   symbol: string = ""
+  filterValue = '';
 
   constructor(private http: HttpClient) { }
 
@@ -32,7 +35,8 @@ export class HomeComponent {
     this.scripts = {}
     this.filter = []
     this.scriptData = {}
-    this.getAllScripts();
+    // this.getAllScripts();
+    this.getAlllScriptCodes();
     this.list_stock_details = [
       {
         start_date: '03/12/2022',
@@ -146,11 +150,26 @@ export class HomeComponent {
   }
 
   getScriptById(id: any) {
+
     this.getData(`http://127.0.0.1:5000/GetScriptById/${id}`).subscribe(data => {
       this.scriptData = data
     })
     this.isOnView = true
   }
+
+  getAlllScriptCodes() {
+    this.getData("http://127.0.0.1:5000/GetAllScriptCode").subscribe(data => {
+      this.scriptCodes = data
+    })
+  }
+
+  //   myResetFunction(options: DropdownFilterOptions) {
+  //     options.reset();
+  //     this.filterValue = '';
+
+  // }
+
+
   getData(url: string,) {
     return this.http.get(url);
   }

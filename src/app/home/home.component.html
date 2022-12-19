@@ -203,14 +203,30 @@
                             <label class="form-label">Script Name</label>
                         </div>
                         <div class="col-4">
-                            <input id="scriptName" class="form-control" #scriptName="ngModel" name="scriptName"
-                                [(ngModel)]="scripts.scriptName" type="text" required
-                                [ngClass]="{'is-invalid': (scriptForm.submitted && scriptName.invalid && !flag) || (scriptName.invalid && scriptName.touched && !flag) }">
-
-                        </div>
-                        <div class="col-2">
-                            <button class="btn btn-secondary"
-                                style="background-color:#FB525A ;color: #fff; ">Get</button>
+                            <p-dropdown [options]="scriptCodes" name="selectedScript" [(ngModel)]="selectedScript"
+                                optionLabel="name" [filter]="true" filterBy="name" [showClear]="true"
+                                placeholder="Select a Script">
+                                <ng-template pTemplate="filter" let-options="options">
+                                    <div class="flex p-3">
+                                        <div class="p-inputgroup" (click)="$event.stopPropagation()">
+                                            <span class="p-inputgroup-addon"><i class="pi pi-search"></i></span>
+                                            <input type="text" pInputText placeholder="Filter" name="filterValue"
+                                                [(ngModel)]="filterValue" (keyup)="options.filter($event)">
+                                        </div>
+                                        <button pButton icon="pi pi-times" class="ml-3"></button>
+                                    </div>
+                                </ng-template>
+                                <ng-template pTemplate="selectedItem">
+                                    <div class="country-item country-item-value" *ngIf="selectedScript">
+                                        <div>{{selectedScript.name}}</div>
+                                    </div>
+                                </ng-template>
+                                <ng-template let-script pTemplate="item">
+                                    <div class="script-item">
+                                        <div>{{script.name}}</div>
+                                    </div>
+                                </ng-template>
+                            </p-dropdown>
                         </div>
                     </div>
 
@@ -374,8 +390,7 @@
                                 <div class="form-floating text-muted fs-6">
                                     <input type="text" class="form-control" placeholder="Script Name" name="scriptName"
                                         style="border-radius: 12px; height: 50px;" [(ngModel)]="scriptData.scriptName"
-                                        type="text" required disabled
-                                        [ngClass]="{'is-invalid': (scriptForm.submitted && scriptName.invalid && !flag) || (scriptName.invalid && scriptName.touched && !flag) }">
+                                        type="text" required disabled>
 
 
                                     <label for="Script Name" class="p-2">Script Name<span style="color: red;">
