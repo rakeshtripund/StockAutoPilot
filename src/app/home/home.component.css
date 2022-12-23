@@ -76,3 +76,7 @@ form .form-label {
 :host ::ng-deep .p-button.p-button-icon-only.p-button-rounded {
     border-radius: 20% !important;
 }
+
+:host ::ng-deep .p-dropdown-panel .p-dropdown-header {
+    padding: 0px !important;
+}

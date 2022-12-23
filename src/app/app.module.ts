@@ -8,7 +8,11 @@ import { HomeComponent } from './home/home.component';
 import { TableModule } from 'primeng/table';
 import { DropdownModule } from 'primeng/dropdown';
 import { HttpClientModule } from "@angular/common/http";
-import { ButtonModule } from 'primeng/button'
+import { ButtonModule } from 'primeng/button';
+
+
+
+
 
 @NgModule({
   declarations: [

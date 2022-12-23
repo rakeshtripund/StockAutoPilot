@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { Script } from './Models/script.model';
+
 import { HttpClient, HttpParams, } from '@angular/common/http';
 
 @Component({
@@ -23,6 +24,7 @@ export class HomeComponent {
   selectedScript: any
   symbolName: string = ""
   symbol: string = ""
+  scriptName: any
   filterValue = '';
 
   constructor(private http: HttpClient) { }
@@ -35,7 +37,7 @@ export class HomeComponent {
     this.scripts = {}
     this.filter = []
     this.scriptData = {}
-    // this.getAllScripts();
+    this.getAllScripts();
     this.getAlllScriptCodes();
     this.list_stock_details = [
       {
@@ -85,8 +87,9 @@ export class HomeComponent {
     this.panelWidth = '0%';
   }
   getFormData(formdata: any) {
+    formdata.scriptName = "NSE:TATASTEEL-EQ"
     console.log(formdata)
-    this.postData("http://127.0.0.1:5000/StartProgram", formdata).subscribe(data => {
+    this.postData("http://127.0.0.1:5000/InsertScript", formdata).subscribe(data => {
       console.log(data);
     });
     setTimeout(() => {
@@ -98,8 +101,9 @@ export class HomeComponent {
 
   getAllScripts() {
     this.getData("http://127.0.0.1:5000/GetAllScripts").subscribe(data => {
-      console.log(data)
       this.scriptsList = data
+      this.scriptName = this.scriptsList[0].scriptName
+      console.log(this.scriptName)
     })
 
   }
@@ -122,8 +126,15 @@ export class HomeComponent {
     this.isOnView = false
   }
 
+  startProgram(id: any) {
+    this.getData(`http://127.0.0.1:5000/StartProgram/${id}`).subscribe(data => {
+      console.log(data)
+    })
+  }
+
+
   onFilter(num: number) {
-    if (this.filter.scriptName === '' && this.filter.trade_created_start_date === '' && this.filter.buyMargin === '' && this.filter.resetCriteria === '') {
+    if (this.filter.scriptName === '' && this.filter.startDate === '' && this.filter.buyMargin === '' && this.filter.resetCriteria === '') {
       this.scriptsList = this.scriptsList;
     } else {
       this.scriptsList = this.scriptsList;
@@ -167,6 +178,24 @@ export class HomeComponent {
   //     options.reset();
   //     this.filterValue = '';
 
+  // }
+
+  // delete(id:any) {
+  //   this.getData(`http://127.0.0.1:5000/GetScriptById/${id}`).subscribe(data => {
+  //     this.scriptData = data
+  // })
+  //   this.ConfirmationService.confirm({
+  //       message: 'Are you sure that you want to delete this Project Tracker ?',
+  //       accept: () => {
+  //           const params = new HttpParams().set('projectTrackerId', this.dataService.encryptUsingAES256(String(this.ProjectTrackerId)));
+  //           this.dataService.deleteData(ApiURIs.DELETEPROJECTTRACKERBYID, params).subscribe(Response => {
+  //               console.log(Response);
+  //           });
+  //           setTimeout(() => {
+  //               this.getProjectTrackerList();
+  //           }, 800);
+  //       }
+  //   });
   // }
 
 
