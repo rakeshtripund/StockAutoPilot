@@ -3,8 +3,23 @@
         <h1>Stock Auto Pilot</h1>
     </div>
     <br />
+    <div class="container">
+        <div class="row">
+            <div class="col-md-10"></div>
+            <div class="col-md-2" align="right">
+                <button type="button" style="background-color: #f06bac; ;border-color: #FB525A ;color: #fff;"
+                    class="btn  float-end" routerLink="/TransactionReport"><strong>Today's
+                        Report</strong>
+                </button>
+            </div>
+        </div>
+    </div>
     <div class="container bg-white p-3 mt-3" *ngIf="!isOnView && !isOnEdit" style="border-radius: 20px; width: 90%;box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px; border: 1px solid
         #FB525A!important;">
+        <!--section for delete pop up-->
+        <p-confirmDialog header="Confirmation" icon="pi pi-exclamation-triangle"
+            [breakpoints]="{'960px': '30vw', '640px': '80vw'}" [style]="{width: '30vw'}"></p-confirmDialog>
+
         <div class="row">
             <div class="col-md-10">
                 <div class="d-flex  justify-content-between">
@@ -12,11 +27,13 @@
                 </div>
             </div>
 
+
             <div class="col-md-2" align="right">
                 <button type="button" style="background-color: #FB525A ;border-color: #FB525A ;color: #fff;"
                     class="btn mt-2 mb-2 float-end" (click)="openNav()"><strong>Add Script</strong>
                 </button>
             </div>
+
         </div>
 
         <div class="row" *ngIf="!isOnView || !isOnEdit">
@@ -109,12 +126,12 @@
 
                                     </div>
                                 </th>
-                                <th pSortableColumn="status" style="width: 14%;">
-                                    <div class="flex justify-content-between align-items-center">Status
+                                <th pSortableColumn="status" style="width: 18%;">
+                                    <div class="flex justify-content-between align-items-left">Status
 
                                     </div>
                                 </th>
-                                <th colspan="8" pSortableColumn="creationdate" style="width: 10%;">
+                                <th colspan="6" pSortableColumn="creationdate" style="width: 10%;">
                                     <div class="p-d-flex p-jc-between p-ai-center" align="center"> Action
                                     </div>
                                 </th>
@@ -143,8 +160,16 @@
                                     {{scripts.quantityBalance}}
                                 </td>
 
-                                <td>
-                                    {{scripts.activeFlag}}
+                                <td *ngIf="scripts.activeFlag == 1">
+                                    Active
+                                </td>
+
+                                <td *ngIf="scripts.activeFlag == 0">
+                                    Saved
+                                </td>
+
+                                <td *ngIf="scripts.activeFlag == 2">
+                                    Paused
                                 </td>
 
                                 <td style="width:4px ;">
@@ -158,8 +183,9 @@
 
 
                                 <td style="width:4px ;">
-                                    <button pButton pRipple type="button" title="Delete" icon="pi pi-trash"
-                                        class="p-button-rounded p-button-danger "></button>
+
+                                    <button pButton pRipple type="button" (click)="delete(scripts.id)" title="Delete"
+                                        icon="pi pi-trash" class="p-button-rounded p-button-danger "></button>
                                 </td>
                                 <!-- <td style="width:4px ;"><button pButton pRipple type="button" title="Play"
                                         icon="pi pi-play" class="p-button-rounded p-button-help "
@@ -354,14 +380,14 @@
                         <div class="col-4"></div>
                         <div class="col-6">
                             <div class="row">
-                                <div class="col-2">
+                                <!-- <div class="col-2">
                                     <button type="submit" style=" background-color:#FB525A ;color: #fff;"
                                         class="btn btn-secondary" [disabled]="scriptForm.invalid"
                                         (click)="addScript(scriptForm.value)">Save</button>
-                                </div>
+                                </div> -->
                                 <div class="col-2">
                                     <button class="btn btn-secondary"
-                                        style="background-color:#FB525A ;color: #fff; ">Start</button>
+                                        style="background-color:#FB525A ;color: #fff; ">Save</button>
                                 </div>
                                 <div class="col-2">
                                     <a style="background-color:#FB525A ;color: #fff; " class="btn btn-secondary"

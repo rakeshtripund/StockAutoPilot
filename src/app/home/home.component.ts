@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { Script } from './Models/script.model';
-
-import { HttpClient, HttpParams, } from '@angular/common/http';
+import { ConfirmationService } from 'primeng/api';
+import { HttpClient, HttpParams, HttpXsrfTokenExtractor, } from '@angular/common/http';
 
 @Component({
   selector: 'app-home',
@@ -27,7 +27,7 @@ export class HomeComponent {
   scriptName: any
   filterValue = '';
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient, private confirmationService: ConfirmationService) { }
 
   ngOnInit(): void {
     this.title_form = 'Script Name';
@@ -174,29 +174,33 @@ export class HomeComponent {
     })
   }
 
+
+
   //   myResetFunction(options: DropdownFilterOptions) {
   //     options.reset();
   //     this.filterValue = '';
 
   // }
 
-  // delete(id:any) {
-  //   this.getData(`http://127.0.0.1:5000/GetScriptById/${id}`).subscribe(data => {
-  //     this.scriptData = data
-  // })
-  //   this.ConfirmationService.confirm({
-  //       message: 'Are you sure that you want to delete this Project Tracker ?',
-  //       accept: () => {
-  //           const params = new HttpParams().set('projectTrackerId', this.dataService.encryptUsingAES256(String(this.ProjectTrackerId)));
-  //           this.dataService.deleteData(ApiURIs.DELETEPROJECTTRACKERBYID, params).subscribe(Response => {
-  //               console.log(Response);
-  //           });
-  //           setTimeout(() => {
-  //               this.getProjectTrackerList();
-  //           }, 800);
-  //       }
-  //   });
-  // }
+  delete(id: any) {
+
+    this.confirmationService.confirm({
+
+      message: 'Are you sure that you want to delete this script?',
+      accept: () => {
+        const params = new HttpParams().set("id", id)
+        this.deleteData("http://127.0.0.1:5000/DeleteScriptById", params).subscribe(data => {
+          setTimeout(() => {
+            this.getAllScripts();
+          }, 500);
+          console.log(data)
+        })
+      }
+    })
+
+  }
+
+
 
 
   getData(url: string,) {
@@ -212,6 +216,10 @@ export class HomeComponent {
   }
   putData(url: string, body: any) {
     return this.http.put(url, body);
+  }
+
+  deleteData(url: string, parameters: HttpParams) {
+    return this.http.delete(url, { params: parameters });
   }
 
 }

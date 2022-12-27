@@ -1,0 +1,23 @@
+.header_section {
+    background-color: #FB525A;
+    color: red;
+    height: 70px;
+    margin-top: 10px;
+
+}
+
+:host ::ng-deep .p-datatable .p-datatable-tbody>tr>td {
+    padding: 8px !important;
+}
+
+:host ::ng-deep .p-datatable .p-datatable-header {
+    padding: 4px !important;
+}
+
+:host ::ng-deep .p-datatable .p-datatable-thead>tr>th {
+    padding: 1px !important;
+}
+
+:host ::ng-deep .p-datatable .p-datatable-header {
+    background-color: #f79bb9;
+}

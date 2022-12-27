@@ -9,7 +9,9 @@ import { TableModule } from 'primeng/table';
 import { DropdownModule } from 'primeng/dropdown';
 import { HttpClientModule } from "@angular/common/http";
 import { ButtonModule } from 'primeng/button';
-
+import { ConfirmDialogModule } from 'primeng/confirmdialog';
+import { ConfirmationService } from 'primeng/api';
+import { TransactionComponent } from './transaction/transaction.component';
 
 
 
@@ -17,7 +19,8 @@ import { ButtonModule } from 'primeng/button';
 @NgModule({
   declarations: [
     AppComponent,
-    HomeComponent
+    HomeComponent,
+    TransactionComponent
   ],
   imports: [
     BrowserModule,
@@ -27,10 +30,11 @@ import { ButtonModule } from 'primeng/button';
     TableModule,
     ButtonModule,
     DropdownModule,
+    ConfirmDialogModule,
     HttpClientModule
 
   ],
-  providers: [],
+  providers: [ConfirmationService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
