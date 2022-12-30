@@ -135,7 +135,7 @@
                             <tr>
                                 <td>{{todaysList.scriptId}}</td>
                                 <td>{{todaysList.scriptName}}</td>
-                                <td>{{todaysList.orderDate}}</td>
+                                <td>{{todaysList.orderDate | date:'dd/MM/yyyy'}}</td>
                                 <td>{{todaysList.orderType}}</td>
                                 <td>{{todaysList.qtySlab}}</td>
                                 <td>{{todaysList.buyTarget}}</td>
@@ -144,11 +144,6 @@
                                 <td>{{todaysList.scriptFundBalance}}</td>
                                 <td>{{todaysList.profit}}</td>
                                 <td>{{todaysList.buyRate}}</td>
-
-
-
-
-
                             </tr>
                         </ng-template>
 

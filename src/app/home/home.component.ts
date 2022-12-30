@@ -20,12 +20,18 @@ export class HomeComponent {
   switchButton: boolean = false;
   isOnEdit: boolean = false;
   scriptData: any
+
   scriptCodes: any
   selectedScript: any
   symbolName: string = ""
   symbol: string = ""
   scriptName: any
+  statusCodes: any
+  transactionData: any
+  CurrentPriceData: any
+  transactiondetails: any;
   filterValue = '';
+
 
   constructor(private http: HttpClient, private confirmationService: ConfirmationService) { }
 
@@ -37,47 +43,14 @@ export class HomeComponent {
     this.scripts = {}
     this.filter = []
     this.scriptData = {}
+    this.transactionData = {}
+    this.CurrentPriceData = {}
+    this.transactiondetails = {}
     this.getAllScripts();
     this.getAlllScriptCodes();
-    this.list_stock_details = [
-      {
-        start_date: '03/12/2022',
-        start_time: 10.00,
-        bought_for: 2,
-        market_rate: 2.20,
-        buy_target: 19.21,
-        sell_target: 4,
-        quantity_balance: 5,
-        script_fund_balance: 45,
-        profit_loss: 45,
-
-      },
-      {
-        start_date: '03/12/2022',
-        start_time: 8.00,
-        bought_for: 2,
-        market_rate: 4.20,
-        buy_target: 45.21,
-        sell_target: 4,
-        quantity_balance: 5,
-        script_fund_balance: 45,
-        profit_loss: 45,
-
-      },
-      {
-        start_date: '1/12/2022',
-        start_time: 1.00,
-        bought_for: 2,
-        market_rate: 2.20,
-        buy_target: 32.21,
-        sell_target: 4,
-        quantity_balance: 5,
-        script_fund_balance: 45,
-        profit_loss: 45,
-
-      },
-    ]
+    this.getAllStatusCodes();
   }
+
 
   openNav() {
     this.panelWidth = '50%';
@@ -86,10 +59,12 @@ export class HomeComponent {
   closeNav() {
     this.panelWidth = '0%';
   }
+
+  //post script data
   getFormData(formdata: any) {
-    formdata.scriptName = "NSE:TATASTEEL-EQ"
     console.log(formdata)
     this.postData("http://127.0.0.1:5000/InsertScript", formdata).subscribe(data => {
+
       console.log(data);
     });
     setTimeout(() => {
@@ -99,13 +74,18 @@ export class HomeComponent {
 
   }
 
+
+  // get all script details
   getAllScripts() {
     this.getData("http://127.0.0.1:5000/GetAllScripts").subscribe(data => {
       this.scriptsList = data
       this.scriptName = this.scriptsList[0].scriptName
       console.log(this.scriptName)
     })
+  }
 
+  getAllScriptsWithCurrentPrice() {
+    return this.http.get("http://127.0.0.1:5000/GetAllScripts")
   }
 
 
@@ -126,10 +106,20 @@ export class HomeComponent {
     this.isOnView = false
   }
 
+
   startProgram(id: any) {
-    this.getData(`http://127.0.0.1:5000/StartProgram/${id}`).subscribe(data => {
-      console.log(data)
-    })
+
+    this.confirmationService.confirm({
+      message: 'Are you sure that you want to proceed?',
+      accept: () => {
+        this.getData(`http://127.0.0.1:5000/StartProgram/${id}`).subscribe(data => {
+          console.log(data)
+        })
+      }
+
+    });
+
+
   }
 
 
@@ -164,7 +154,9 @@ export class HomeComponent {
 
     this.getData(`http://127.0.0.1:5000/GetScriptById/${id}`).subscribe(data => {
       this.scriptData = data
+      this.getTransactionById(id)
     })
+
     this.isOnView = true
   }
 
@@ -174,34 +166,49 @@ export class HomeComponent {
     })
   }
 
+  getAllStatusCodes() {
+    this.getData("http://127.0.0.1:5000/GetAllScriptCode").subscribe(data => {
+      this.statusCodes = data
+    })
+  }
+  //gettransactionsdetailsbyid
+  getTransactionById(id: any) {
 
-
-  //   myResetFunction(options: DropdownFilterOptions) {
-  //     options.reset();
-  //     this.filterValue = '';
-
-  // }
-
-  delete(id: any) {
-
-    this.confirmationService.confirm({
-
-      message: 'Are you sure that you want to delete this script?',
-      accept: () => {
-        const params = new HttpParams().set("id", id)
-        this.deleteData("http://127.0.0.1:5000/DeleteScriptById", params).subscribe(data => {
-          setTimeout(() => {
-            this.getAllScripts();
-          }, 500);
-          console.log(data)
-        })
-      }
+    this.getData(`http://127.0.0.1:5000/getTransactionById/${id}`).subscribe(data => {
+      this.transactionData = data
+      console.log(data);
     })
 
   }
 
+  //get current price by script id
+  getCurrentPriceByScriptId(id: any) {
+    this.getData(`http://127.0.0.1:5000/getCurrentpriceByscriptId/${id}`).subscribe(data => {
+      this.CurrentPriceData = data
+      console.log(data);
+    })
 
+  }
 
+  // delete script by id
+  delete(id: any) {
+    this.getData(`http://127.0.0.1:5000/GetScriptById/${id}`).subscribe(data => {
+      this.scriptData = data
+      this.confirmationService.confirm({
+
+        message: `Are you sure that you want to delete this script?${this.scriptData.scriptName} which was average bought at ${this.scriptData.avgPrice} at `,
+        accept: () => {
+          const params = new HttpParams().set("id", id)
+          this.deleteData("http://127.0.0.1:5000/DeleteScriptById", params).subscribe(data => {
+            setTimeout(() => {
+              this.getAllScripts();
+            }, 500);
+            console.log(data)
+          })
+        }
+      })
+    })
+  }
 
   getData(url: string,) {
     return this.http.get(url);

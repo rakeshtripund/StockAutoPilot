@@ -20,7 +20,7 @@ export class TransactionComponent {
 
   }
   getAllTransactions() {
-    this.getData("http://127.0.0.1:8001/GetTransactionForCurrentDate").subscribe(data => {
+    this.getData("http://127.0.0.1:5000/GetTransactionForCurrentDate").subscribe(data => {
       this.todaysTransactionList = data
 
     })

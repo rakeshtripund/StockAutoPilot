@@ -20,6 +20,8 @@
         <p-confirmDialog header="Confirmation" icon="pi pi-exclamation-triangle"
             [breakpoints]="{'960px': '30vw', '640px': '80vw'}" [style]="{width: '30vw'}"></p-confirmDialog>
 
+
+
         <div class="row">
             <div class="col-md-10">
                 <div class="d-flex  justify-content-between">
@@ -73,7 +75,7 @@
                     <p-table id="scriptsList" dataKey="id" [value]="scriptsList" [rowHover]="true" [rows]="25"
                         [showCurrentPageReport]="true" [rowsPerPageOptions]="[25,50,100,150]" responsiveLayout="scroll"
                         [paginator]="true" [filterDelay]="0" [style]="{'float':'right !important'}"
-                        [globalFilterFields]="['scriptName','investmentAmount','startDate', 'buyMargin','sellMargin','resetCriteria','quantity_balance','status']"
+                        [globalFilterFields]="['scriptName','investmentAmount','startDate', 'buyMargin','sellMargin','resetCriteria','quantity_balance','avgPrice','currentPrice','deal','status']"
                         sortField="" [sortOrder]="-1">
                         <ng-template pTemplate="caption">
                             <div class="d-flex justify-content-between">
@@ -95,18 +97,18 @@
 
                                     </div>
                                 </th>
-                                <th pSortableColumn="investmentAmount" style="width: 18%;">
+                                <th pSortableColumn="investmentAmount" style="width: 15%;">
                                     <div class="flex justify-content-between align-items-center">Investment Amount
 
                                     </div>
                                 </th>
                                 <th pSortableColumn="startDate" style="width: 18%;">
-                                    <div class="flex justify-content-between align-items-center">Trade Created/Start
+                                    <div class="flex justify-content-between align-items-center"> Created
                                         Date
 
                                     </div>
                                 </th>
-                                <th pSortableColumn="buyMargin" style="width: 12%;">
+                                <!-- <th pSortableColumn="buyMargin" style="width: 12%;">
                                     <div class="flex justify-content-between align-items-center">Buy Margin
 
                                     </div>
@@ -115,22 +117,56 @@
                                     <div class="flex justify-content-between align-items-center">Sell Margin
 
                                     </div>
-                                </th>
-                                <th pSortableColumn="resetCriteria" style="width: 12%;">
+                                </th> -->
+                                <!-- <th pSortableColumn="resetCriteria" style="width: 12%;">
                                     <div class="flex justify-content-between align-items-center"> Reset Criteria
 
                                     </div>
-                                </th>
+                                </th> -->
+
                                 <th pSortableColumn="quantity_balance" style="width: 14%;">
-                                    <div class="flex justify-content-between align-items-center">Quantity Balance
+                                    <div class="flex justify-content-between align-items-center">Qty Balance
 
                                     </div>
                                 </th>
-                                <th pSortableColumn="status" style="width: 18%;">
-                                    <div class="flex justify-content-between align-items-left">Status
+                                <th pSortableColumn="avgPrice" style="width: 12%;">
+                                    <div class="flex justify-content-between align-items-center">Avg Price
 
                                     </div>
                                 </th>
+                                <th pSortableColumn="currentPrice" style="width: 12%;">
+                                    <div class="flex justify-content-between align-items-center">Current Price
+
+                                    </div>
+                                </th>
+                                <th pSortableColumn="deal" style="width: 12%;">
+                                    <div class="flex justify-content-between align-items-center">Deal
+
+                                    </div>
+                                </th>
+                                <th pSortableColumn="StatusName" style="width: 10%;" id="status-column">
+
+                                    <div class="flex justify-content-between mt-2 align-items-center">
+                                        Status
+
+                                        <p-columnFilter field="StatusName" matchMode="equals" [showMenu]="false">
+                                            <ng-template pTemplate="filter" let-value let-filter="filterCallback">
+                                                <p-dropdown [options]="statusCodes" (onChange)="filter($event.value)"
+                                                    placeholder="Any" [showClear]="true">
+                                                    <ng-template let-option pTemplate="item">
+                                                        <span
+                                                            [class]="'customer-badge status-' + option.replace(' ', '')">{{option}}</span>
+                                                    </ng-template>
+                                                </p-dropdown>
+                                            </ng-template>
+                                        </p-columnFilter>
+                                    </div>
+                                </th>
+
+
+
+
+
                                 <th colspan="6" pSortableColumn="creationdate" style="width: 10%;">
                                     <div class="p-d-flex p-jc-between p-ai-center" align="center"> Action
                                     </div>
@@ -145,19 +181,28 @@
                                 <td>{{scripts.scriptName}}</td>
                                 <td>{{scripts.investmentBalance}}
                                 </td>
-                                <td>{{scripts.startDate | date: 'shortDate' }}
+                                <td>{{scripts.startDate | date:'dd/MM/yyyy' }}
                                 </td>
-                                <td>
+                                <!-- <td>
                                     {{scripts.buyMargin}}
                                 </td>
                                 <td>
                                     {{scripts.sellMargin}}
-                                </td>
-                                <td>
+                                </td> -->
+                                <!-- <td>
                                     {{scripts.resetCriteria}}
-                                </td>
+                                </td> -->
                                 <td>
                                     {{scripts.quantityBalance}}
+                                </td>
+                                <td>
+                                    {{scripts.avgPrice}}
+                                </td>
+                                <td>
+                                    216.087
+                                </td>
+                                <td>
+                                    +2000
                                 </td>
 
                                 <td *ngIf="scripts.activeFlag == 1">
@@ -308,9 +353,9 @@
                         </div>
 
                         <div class="col-8">
-                            <div class="form-check">
+                            <!-- <div class="form-check">
                                 <input id="resetCriteria" #resetCriteria="ngModel" [(ngModel)]="scripts.resetCriteria"
-                                    class="form-check-input" type="radio" value="1" checked
+                                    class="form-check-input" type="radio" checked
                                     [ngClass]="{'is-invalid': (scriptForm.submitted && resetCriteria.invalid && !flag) || (resetCriteria.invalid && resetCriteria.touched) && !flag }"
                                     name="resetCriteria">
                                 <label class="form-check-label">
@@ -320,7 +365,7 @@
 
                             <div class="form-check">
                                 <input id="marginalBuyId" class="form-check-input" #resetCriteria="ngModel"
-                                    [(ngModel)]="scripts.resetCriteria" value="2" checked
+                                    [(ngModel)]="scripts.resetCriteria"
                                     [ngClass]="{'is-invalid': (scriptForm.submitted && resetCriteria.invalid && !flag) || (resetCriteria.invalid && resetCriteria.touched && !flag) }"
                                     name="resetCriteria" type="radio" name="resetCriteria">
                                 <label class="form-check-label">
@@ -330,10 +375,31 @@
 
                             <div class="form-check">
                                 <input id="specificValueId" class="form-check-input" #resetCriteria="ngModel"
-                                    [(ngModel)]="scripts.resetCriteria" value="3" checked
+                                    [(ngModel)]="scripts.resetCriteria"
                                     [ngClass]="{'is-invalid': (scriptForm.submitted && resetCriteria.invalid && !flag ) || (resetCriteria.invalid && resetCriteria.touched && !flag) }"
                                     name="resetCriteria" type="radio" name="resetCriteria">
                                 <label class="form-check-label">
+                                    Specific Value
+                                </label>
+                            </div> -->
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="resetCriteria" id="resetCriteria1"
+                                    value="1" checked>
+                                <label class="form-check-label" for="resetCriteria1">
+                                    Spot Price
+                                </label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="resetCriteria" id="resetCriteria2"
+                                    value="2">
+                                <label class="form-check-label" for="resetCriteria2">
+                                    Marginal Buy
+                                </label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="resetCriteria" id="resetCriteria3"
+                                    value="3">
+                                <label class="form-check-label" for="resetCriteria3">
                                     Specific Value
                                 </label>
                             </div>
@@ -346,17 +412,16 @@
                         </div>
                         <div class="col-8">
                             <div class="form-check">
-                                <input id="exchange" #exchange="ngModel" [(ngModel)]="scripts.exchange"
-                                    class="form-check-input" type="radio" value="BSE" checked name="exchange">
+                                <input id="exchange" class="form-check-input" type="radio" value="BSE" checked
+                                    name="exchange">
                                 <label class="form-check-label">
                                     BSE
                                 </label>
                             </div>
 
                             <div class="form-check">
-                                <input id="nse_exchange" class="form-check-input" #exchange="ngModel"
-                                    [(ngModel)]="scripts.exchange" value="NSE" checked name="exchange" type="radio"
-                                    checked>
+                                <input id="nse_exchange" class="form-check-input" value="NSE" checked name="exchange"
+                                    type="radio" checked>
                                 <label class="form-check-label">
                                     NSE
                                 </label>
@@ -385,14 +450,22 @@
                                         class="btn btn-secondary" [disabled]="scriptForm.invalid"
                                         (click)="addScript(scriptForm.value)">Save</button>
                                 </div> -->
+
                                 <div class="col-2">
                                     <button class="btn btn-secondary"
                                         style="background-color:#FB525A ;color: #fff; ">Save</button>
                                 </div>
                                 <div class="col-2">
+                                    <input type="reset" class="btn btn-secondary" value="Reset"
+                                        class="btn btn-secondary"
+                                        style="background-color:#FB525A ;color: #fff; border-radius: 6px; ">
+                                </div>
+                                <div class="col-2">
                                     <a style="background-color:#FB525A ;color: #fff; " class="btn btn-secondary"
                                         (click)="closeNav()">Cancel</a>
                                 </div>
+                                <!-- <div class="col-1"></div> -->
+
                             </div>
                         </div>
                     </div>
@@ -541,10 +614,9 @@
                 <div class="px-3 mt-3">
 
 
-                    <p-table id="view_stock_details" dataKey="id" [value]="list_stock_details" [rowHover]="true"
-                        [rows]="25" [showCurrentPageReport]="true" [rowsPerPageOptions]="[25,50,100,150]"
-                        responsiveLayout="scroll" [paginator]="true" [filterDelay]="0"
-                        [style]="{'float':'right !important'}"
+                    <p-table id="transactionData" dataKey="id" [value]="transactionData" [rowHover]="true" [rows]="25"
+                        [showCurrentPageReport]="true" [rowsPerPageOptions]="[25,50,100,150]" responsiveLayout="scroll"
+                        [paginator]="true" [filterDelay]="0" [style]="{'float':'right !important'}"
                         [globalFilterFields]="['start_date','start_time','bought_for','market_rate,buy_target,sell_target,quantity_balance,script_fund_balance,profit_loss']"
                         sortField="" [sortOrder]="-1">
                         <ng-template pTemplate="caption">
@@ -651,36 +723,19 @@
                             </tr>
                         </ng-template>
 
-                        <ng-template pTemplate="body" let-stock>
+                        <ng-template pTemplate="body" let-transactiondetails>
                             <tr>
-                                <td></td>
-                                <td style="padding: 0.5rem 1rem; font-size: 12px">
-                                    {{stock.start_date}}
-                                </td>
-                                <td style="padding: 0.5rem 1rem; font-size: 12px">
-                                    {{stock.start_time}}
-                                </td>
-                                <td style="padding: 0.5rem 1rem; font-size: 12px">
-                                    {{stock.bought_for}}
-                                </td>
-                                <td style="padding: 0.5rem 1rem; font-size: 12px">
-                                    {{stock.market_rate}}
-                                </td>
-                                <td style="padding: 0.5rem 1rem; font-size: 12px">
-                                    {{stock.buy_target}}
-                                </td>
-                                <td style="padding: 0.5rem 1rem; font-size: 12px">
-                                    {{stock.sell_target}}
-                                </td>
-                                <td style="padding: 0.5rem 1rem; font-size: 12px">
-                                    {{stock.quantity_balance}}
-                                </td>
-                                <td style="padding: 0.5rem 1rem; font-size: 12px">
-                                    {{stock.script_fund_balance}}
-                                </td>
-                                <td style="padding: 0.5rem 1rem; font-size: 12px">
-                                    {{stock.profit_loss}}
-                                </td>
+                                <td>{{transactiondetails.scriptId}}</td>
+                                <td>{{transactiondetails.scriptName}}</td>
+                                <td>{{transactiondetails.orderDate| date:'dd/MM/yyyy' }}</td>
+                                <td>{{transactiondetails.orderType}}</td>
+                                <td>{{transactiondetails.qtySlab}}</td>
+                                <td>{{transactiondetails.buyTarget}}</td>
+                                <td>{{transactiondetails.sellTarget}}</td>
+                                <td>{{transactiondetails.qtyBalance}}</td>
+                                <td>{{transactiondetails.scriptFundBalance}}</td>
+                                <td>{{transactiondetails.profit}}</td>
+                                <td>{{transactiondetails.buyRate}}</td>
 
                                 <!-- <td style="width:4px ;"><a (click)="viewScriptById(1)"><i title="View"
                                             class="pi pi-eye"></i></a>
