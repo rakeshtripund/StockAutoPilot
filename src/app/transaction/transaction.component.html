@@ -24,21 +24,21 @@
                     <label for="scriptName" class="p-2">Script Name</label>
                 </div>
             </div>
-            <!-- <div class="col-3">
+            <div class="col-3">
                 <div class="form-floating text-muted fs-6">
-                    <input type="date" class="form-control" id="" placeholder="From Date"
-                        style="border-radius: 12px; height: 50px;" name="">
+                    <input type="date" class="form-control" id="" placeholder="From Date" [(ngModel)]="filter.fromDate"
+                        (ngModelChange)="filterDate()" style="border-radius: 12px; height: 50px;" name="">
                     <label for="" class="p-2">From Date</label>
                 </div>
             </div>
             <div class="col-3">
                 <div class="form-floating text-muted fs-6">
-                    <input type="date" class="form-control" id="" placeholder="To Date"
+                    <input type="date" class="form-control" id="" placeholder="To Date" [(ngModel)]="filter.toDate"
                         style="border-radius: 12px; height: 50px;" name="">
                     <label for="" class="p-2">To Date</label>
                 </div>
-            </div> -->
-            <div class="col-6"></div>
+            </div>
+
 
             <div class="col-3" align="right">
                 <button type="button" style="background-color: #FB525A;border-color: #FB525A;color: #fff;"
@@ -53,7 +53,6 @@
         <div class="card border-0 px-3 mt-3" style="width:100%;margin: auto">
 
             <div class="row ps-1">
-
                 <div class="px-3">
                     <p-table id="scriptsList" dataKey="id" [value]="todaysTransactionList" [rowHover]="true" [rows]="25"
                         [showCurrentPageReport]="true" [rowsPerPageOptions]="[25,50,100,150]" responsiveLayout="scroll"
@@ -144,6 +143,11 @@
                                 <td>{{todaysList.scriptFundBalance}}</td>
                                 <td>{{todaysList.profit}}</td>
                                 <td>{{todaysList.buyRate}}</td>
+
+
+
+
+
                             </tr>
                         </ng-template>
 

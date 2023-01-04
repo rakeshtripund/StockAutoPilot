@@ -1,7 +1,9 @@
 import { Component } from '@angular/core';
 import { Script } from './Models/script.model';
 import { ConfirmationService } from 'primeng/api';
+import { timer } from 'rxjs';
 import { HttpClient, HttpParams, HttpXsrfTokenExtractor, } from '@angular/common/http';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-home',
@@ -12,7 +14,10 @@ export class HomeComponent {
   public panelWidth: any;
   filter: any;
   scripts: any;
+  title: any;
   title_form: any;
+
+  edit_form_title: any;
   scriptsList: any;
   list_stock_details: any = [];
   flag: boolean = false
@@ -20,23 +25,36 @@ export class HomeComponent {
   switchButton: boolean = false;
   isOnEdit: boolean = false;
   scriptData: any
-
+  obsTimer: Observable<number> = timer(1000, 300 * 1000);
+  currTime: number = 0;
+  statuses: any = [];
   scriptCodes: any
+  statusCodes: any
   selectedScript: any
   symbolName: string = ""
   symbol: string = ""
   scriptName: any
-  statusCodes: any
   transactionData: any
   CurrentPriceData: any
   transactiondetails: any;
   filterValue = '';
+  allScriptsList: any = []
 
 
   constructor(private http: HttpClient, private confirmationService: ConfirmationService) { }
 
   ngOnInit(): void {
+    this.obsTimer.subscribe(() => {
+      this.getData("http://127.0.0.1:5000/updateScriptsCurrentPrice").subscribe(data => {
+        setTimeout(() => {
+          this.getAllScripts();
+        }, 500)
+      })
+
+    });
+    this.title = 'Add Script'
     this.title_form = 'Script Name';
+
     this.isOnView = false
     this.isOnEdit = false
     this.switchButton = false
@@ -49,6 +67,11 @@ export class HomeComponent {
     this.getAllScripts();
     this.getAlllScriptCodes();
     this.getAllStatusCodes();
+    setTimeout(() => {
+      this.filterByStatus("1")
+    }, 500)
+    this.statuses = ['Paused', 'Saved', 'Deleted', 'Live'];
+
   }
 
 
@@ -79,13 +102,23 @@ export class HomeComponent {
   getAllScripts() {
     this.getData("http://127.0.0.1:5000/GetAllScripts").subscribe(data => {
       this.scriptsList = data
+      this.allScriptsList = data
+      console.log(this.scriptsList)
       this.scriptName = this.scriptsList[0].scriptName
-      console.log(this.scriptName)
-    })
-  }
+      for (let script of this.scriptsList) {
+        script.startDate = new Date(script.startDate);
+        if (script.activeFlag == 1) {
+          script.activeFlag = 'Live'
+        }
+        else if (script.activeFlag == 0) {
+          script.activeFlag = 'Paused'
+        }
+        else if (script.activeFlag == -1) {
+          script.activeFlag = 'Saved'
+        }
 
-  getAllScriptsWithCurrentPrice() {
-    return this.http.get("http://127.0.0.1:5000/GetAllScripts")
+      }
+    })
   }
 
 
@@ -97,6 +130,8 @@ export class HomeComponent {
 
   viewScriptById(id: number) {
     this.isOnView = true
+
+
   }
   editScriptById(id: number) {
     this.isOnEdit = true
@@ -110,16 +145,14 @@ export class HomeComponent {
   startProgram(id: any) {
 
     this.confirmationService.confirm({
-      message: 'Are you sure that you want to proceed?',
+      message: 'Are you sure that you want to perform this action?',
       accept: () => {
         this.getData(`http://127.0.0.1:5000/StartProgram/${id}`).subscribe(data => {
-          console.log(data)
         })
+        this.updateScriptStatus(id, 1)
       }
 
     });
-
-
   }
 
 
@@ -133,10 +166,25 @@ export class HomeComponent {
         this.scriptsList = this.scriptsList.filter((e: any) => e.scriptName.toString().includes(scriptName));
       }
       else if (num === 2) {
-        const trade_created_start_date = this.filter.trade_created_start_date;
-        this.scriptsList = this.scriptsList.filter((e: any) => e.trade_created_start_date.toString().includes(trade_created_start_date));
+        let d = new Date(new Date(this.filter.startDate))
+        this.scriptsList = this.scriptsList.filter((e: any) => e.startDate.toDateString() === d.toDateString());
       }
 
+    }
+  }
+
+  filterByStatus(num: any) {
+    this.scriptsList = this.allScriptsList
+    if (num == "1") {
+      console.log("1")
+      console.log(this.scriptsList)
+      this.scriptsList = this.scriptsList.filter((e: any) => e.isdeleted == 0);
+      console.log(this.scriptsList)
+    }
+    else if (num == "2") {
+      console.log("2")
+      this.scriptsList = this.scriptsList.filter((e: any) => e.isdeleted == 1);
+      console.log(this.scriptsList)
     }
   }
   updateStatus(id: any, status: any) {
@@ -148,16 +196,24 @@ export class HomeComponent {
       this.getAllScripts(),
         500
     })
+
   }
 
-  getScriptById(id: any) {
+
+  getScriptById(id: any, mode: any) {
 
     this.getData(`http://127.0.0.1:5000/GetScriptById/${id}`).subscribe(data => {
       this.scriptData = data
       this.getTransactionById(id)
     })
 
-    this.isOnView = true
+    if (mode == 1) {
+      this.isOnView = true
+    }
+    else if (mode == 2) {
+      this.isOnEdit = true
+    }
+    this.openNav();
   }
 
   getAlllScriptCodes() {
@@ -196,9 +252,11 @@ export class HomeComponent {
       this.scriptData = data
       this.confirmationService.confirm({
 
-        message: `Are you sure that you want to delete this script?${this.scriptData.scriptName} which was average bought at ${this.scriptData.avgPrice} at `,
+        message: `Are you sure that you want to delete this script?${this.scriptData.scriptName} which was average bought at ${this.scriptData.avgPrice} at ${this.scriptData.currentprice} `,
         accept: () => {
           const params = new HttpParams().set("id", id)
+            .set("qty", this.scriptData.quantityBalance)
+            .set("scriptName", this.scriptData.scriptName)
           this.deleteData("http://127.0.0.1:5000/DeleteScriptById", params).subscribe(data => {
             setTimeout(() => {
               this.getAllScripts();
@@ -209,6 +267,18 @@ export class HomeComponent {
       })
     })
   }
+
+  updateScriptStatus(id: any, status: any) {
+    const params = new HttpParams().set("id", id)
+      .set("status", status)
+    this.getDataWithParams("http://127.0.0.1:5000/UpdateScriptStatusById", params).subscribe(data => {
+      setTimeout(() => {
+        this.getAllScripts();
+      }, 500);
+    })
+  }
+
+
 
   getData(url: string,) {
     return this.http.get(url);
