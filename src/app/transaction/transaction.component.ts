@@ -30,21 +30,9 @@ export class TransactionComponent {
   }
 
   filterDate() {
-    if (this.filter.fromDate == '' || this.filter.toDate == '') {
-      let d = new Date()
-      console.log(d.toDateString())
-      this.todaysTransactionList = this.todaysTransactionList.filter((e: any) => e.orderDate.toDateString() === d.toDateString())
-    }
-    else if (this.filter.fromDate !== '' || this.filter.toDate == '') {
-      this.todaysTransactionList = this.allTransactionList
-      let d = new Date(this.filter.fromDate)
-      this.todaysTransactionList = this.todaysTransactionList.filter((e: any) => e.orderDate.toDateString() >= d.toDateString())
-    }
-    else if (this.filter.fromDate !== '' || this.filter.toDate !== '') {
-      this.todaysTransactionList = this.allTransactionList
-      let d = new Date(this.filter.fromDate)
-      this.todaysTransactionList = this.todaysTransactionList.filter((e: any) => e.orderDate.toDateString() >= d.toDateString() && e.orderDate.toDateString() <= d.toDateString())
-    }
+    let d = new Date()
+    console.log(d.toDateString())
+    this.todaysTransactionList = this.todaysTransactionList.filter((e: any) => e.orderDate.toDateString() === d.toDateString())
   }
   getData(url: string,) {
     return this.http.get(url);
