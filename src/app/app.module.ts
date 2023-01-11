@@ -12,6 +12,7 @@ import { ButtonModule } from 'primeng/button';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { ConfirmationService } from 'primeng/api';
 import { TransactionComponent } from './transaction/transaction.component';
+import { LoginComponent } from './login/login.component';
 
 
 
@@ -20,7 +21,8 @@ import { TransactionComponent } from './transaction/transaction.component';
   declarations: [
     AppComponent,
     HomeComponent,
-    TransactionComponent
+    TransactionComponent,
+    LoginComponent,
   ],
   imports: [
     BrowserModule,

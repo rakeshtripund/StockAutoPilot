@@ -11,19 +11,27 @@ export class TransactionComponent {
   todaysList: any;
   filter: any = [];
   allTransactionList: any;
+  orderstatus: any
 
   constructor(private http: HttpClient) { }
   ngOnInit(): void {
     this.todaysList = {}
     this.getAllTransactions();
+    this.orderstatus = ['Buy', 'Sell'];
 
   }
   getAllTransactions() {
-    this.getData("http://127.0.0.1:8001/GetTransactionForCurrentDate").subscribe(data => {
+    this.getData("http://127.0.0.1:5000/GetTransactionForCurrentDate").subscribe(data => {
       this.todaysTransactionList = data
       this.allTransactionList = data
       for (let transaction of this.todaysTransactionList) {
         transaction.orderDate = new Date(transaction.orderDate)
+        if (transaction.orderType == 1) {
+          transaction.orderType = "Buy"
+        }
+        else if (transaction.orderType == -1) {
+          transaction.orderType = "Sell"
+        }
       }
     })
 

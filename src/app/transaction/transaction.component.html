@@ -10,7 +10,7 @@
         <div class="row">
             <div class="col-md-10">
                 <div class="d-flex  justify-content-between">
-                    <p class="fs-4 mt-2"> <strong>Today's Transaction Report</strong> </p>
+                    <p class="fs-4 mt-2"> <strong> Transaction Report</strong> </p>
                 </div>
             </div>
 
@@ -37,13 +37,28 @@
                         style="border-radius: 12px; height: 50px;" name="">
                     <label for="" class="p-2">To Date</label>
                 </div>
+
             </div>
 
 
-            <div class="col-3" align="right">
-                <button type="button" style="background-color: #FB525A;border-color: #FB525A;color: #fff;"
-                    class="btn  mt-2 mb-2 float-end ">
-                    <strong>Buy/Sell Report</strong> </button>
+            <div class="col-3 pe-4" align="right">
+                <!-- <div class="row">
+                    <div class="col-4"></div>
+                    <div class="col-8">
+                        <button type="button" style="background-color: #FB525A;border-color: #FB525A;color: #fff;"
+                            class="btn  mt-2 mb-2 float-end">
+                            <strong>Buy/Sell Report</strong> </button>
+                    </div>
+                </div> -->
+                <div class="row">
+                    <div class="col-4"></div>
+                    <div class="col-8">
+                        <button type="button" routerLink="/StockAutoPilot"
+                            style="width:70%; background-color:#FB525A ;color: #fff;"
+                            class="btn btn-outline-secondary">Back</button>
+                    </div>
+                </div>
+
 
             </div>
 
@@ -61,70 +76,102 @@
                         sortField="" [sortOrder]="-1">
                         <ng-template pTemplate="caption">
                             <div class="d-flex justify-content-between">
-                                <p class="fs-5 mt-2">Today's Transaction Report</p>
+                                <p class="fs-5 mt-2"> Transaction Detail Report</p>
                             </div>
                         </ng-template>
 
                         <ng-template pTemplate="header">
                             <tr style="font-size: 14px;">
-                                <th pSortableColumn="scriptId" style="width: 6%;">
-                                    <div class="flex justify-content-between align-items-center">Script Id
+                                <th pSortableColumn="scriptId" style="width: 5%;">
+                                    <div class="flex justify-content-between align-items-center text-center">Script Id
                                         <!-- <p-sortIcon field="id"></p-sortIcon> -->
 
                                     </div>
                                 </th>
                                 <th pSortableColumn="scriptName" style="width: 8%;">
-                                    <div class="flex justify-content-between align-items-center">Script Name
+                                    <div class="flex justify-content-between align-items-center text-center">Script Name
 
 
                                     </div>
                                 </th>
-                                <th pSortableColumn="orderDate" style="width: 25%;">
-                                    <div class="flex justify-content-between align-items-center">Order Date / Time
+                                <th pSortableColumn="orderDate" style="width: 7%;">
+                                    <div class="flex justify-content-between align-items-center text-center">Order Date
 
                                     </div>
                                 </th>
-                                <th pSortableColumn="orderType" style="width: 8%;">
-                                    <div class="flex justify-content-between align-items-center">
+                                <th pSortableColumn="orderType" style="width: 7%;">
+                                    <div class="flex justify-content-between align-items-center text-center">
                                         Order Type
 
                                     </div>
                                 </th>
-                                <th pSortableColumn="qty_slab" style="width: 9%;">
-                                    <div class="flex justify-content-between align-items-center">Quantity Slab
+                                <th pSortableColumn="qty_slab" style="width: 6%;">
+                                    <div class="flex justify-content-between align-items-center text-center">Quantity
+                                        Slab
 
                                     </div>
                                 </th>
                                 <th pSortableColumn="buyTarget" style="width: 8%;">
-                                    <div class="flex justify-content-between align-items-center">Buy Target
+                                    <div class="flex justify-content-between align-items-center text-center">Buy Target
 
                                     </div>
                                 </th>
                                 <th pSortableColumn="sellTarget" style="width: 8%;">
-                                    <div class="flex justify-content-between align-items-center"> Sell Target
+                                    <div class="flex justify-content-between align-items-center text-center"> Sell
+                                        Target
 
                                     </div>
                                 </th>
-                                <th pSortableColumn="qtyBalance" style="width: 10%;">
-                                    <div class="flex justify-content-between align-items-center">Quantity Balance
+                                <th pSortableColumn="qtyBalance" style="width: 8%;">
+                                    <div class="flex justify-content-between align-items-center text-center">Qty Balance
 
                                     </div>
                                 </th>
-                                <th pSortableColumn="scriptFundBalance" style="width: 10%;">
-                                    <div class="flex justify-content-between align-items-left">Script Fund Balance
+                                <th pSortableColumn="scriptFundBalance" style="width: 12%;">
+                                    <div class="flex justify-content-between align-items-left text-center">Script Fund
+                                        Balance
 
                                     </div>
                                 </th>
                                 <th pSortableColumn="profit" style="width: 8%;">
-                                    <div class="flex justify-content-between align-items-left">Profit
+                                    <div class="flex justify-content-between align-items-left text-center">Profit
 
                                     </div>
                                 </th>
                                 <th pSortableColumn="buyRate" style="width: 8%;">
-                                    <div class="flex justify-content-between align-items-left">Buy Rate
+                                    <div class="flex justify-content-between align-items-left text-center">Buy Rate
 
                                     </div>
                                 </th>
+
+                            </tr>
+                            <tr>
+                                <th></th>
+                                <th></th>
+
+
+                                <th></th>
+                                <th>
+                                    <p-columnFilter field="orderType" matchMode="equals" [showMenu]="false">
+                                        <ng-template pTemplate="filter" let-value let-filter="filterCallback">
+                                            <p-dropdown [options]="orderstatus" (onChange)="filter($event.value)"
+                                                placeholder="Any" [showClear]="true">
+                                                <ng-template let-option pTemplate="item">
+                                                    <span [class]="'customer-badge status-' + option">{{option}}</span>
+                                                </ng-template>
+                                            </p-dropdown>
+                                        </ng-template>
+                                    </p-columnFilter>
+                                </th>
+                                <th></th>
+                                <th></th>
+                                <th></th>
+                                <th></th>
+                                <th></th>
+                                <th></th>
+                                <th></th>
+
+
 
                             </tr>
 
@@ -132,17 +179,17 @@
 
                         <ng-template pTemplate="body" let-todaysList>
                             <tr>
-                                <td>{{todaysList.scriptId}}</td>
-                                <td>{{todaysList.scriptName}}</td>
-                                <td>{{todaysList.orderDate | date:'dd/MM/yyyy'}}</td>
-                                <td>{{todaysList.orderType}}</td>
-                                <td>{{todaysList.qtySlab}}</td>
-                                <td>{{todaysList.buyTarget | number}}</td>
-                                <td>{{todaysList.sellTarget | number}}</td>
-                                <td>{{todaysList.qtyBalance}}</td>
-                                <td>{{todaysList.scriptFundBalance | number}}</td>
-                                <td>{{todaysList.profit | number}}</td>
-                                <td>{{todaysList.buyRate | number}}</td>
+                                <td class="text-center">{{todaysList.scriptId}}</td>
+                                <td class="text-center">{{todaysList.scriptName}}</td>
+                                <td class="text-center">{{todaysList.orderDate | date:'dd/MM/yyyy'}}</td>
+                                <td class="text-center">{{todaysList.orderType}}</td>
+                                <td class="text-center">{{todaysList.qtySlab}}</td>
+                                <td class="text-center">{{todaysList.buyTarget | number : '1.2-2'}}</td>
+                                <td class="text-center">{{todaysList.sellTarget | number: '1.2-2'}}</td>
+                                <td class="text-center">{{todaysList.qtyBalance}}</td>
+                                <td class="text-center"> {{todaysList.scriptFundBalance | number: '1.2-2'}}</td>
+                                <td class="text-center">{{todaysList.profit | number: '1.2-2'}}</td>
+                                <td class="text-center">{{todaysList.buyRate | number: '1.2-2'}}</td>
 
 
 
@@ -162,9 +209,7 @@
                 <div class="row mt-6 p-1 mt-4">
                     <div class="col-lg-10"></div>
                     <div class="col-lg-2" align="center">
-                        <button type="button" routerLink="/StockAutoPilot"
-                            style="width:90%; background-color:#FB525A ;color: #fff;"
-                            class="btn btn-outline-secondary">Back</button>
+
                     </div>
 
                 </div>

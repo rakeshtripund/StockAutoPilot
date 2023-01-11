@@ -4,6 +4,7 @@ import { ConfirmationService } from 'primeng/api';
 import { timer } from 'rxjs';
 import { HttpClient, HttpParams, HttpXsrfTokenExtractor, } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-home',
@@ -42,11 +43,11 @@ export class HomeComponent {
   allScriptsList: any = []
 
 
-  constructor(private http: HttpClient, private confirmationService: ConfirmationService) { }
+  constructor(private http: HttpClient, private confirmationService: ConfirmationService, public router: Router) { }
 
   ngOnInit(): void {
     this.obsTimer.subscribe(() => {
-      this.getData("http://127.0.0.1:5000/updateScriptsCurrentPrice").subscribe(data => {
+      this.getData("http://127.0.0.1:8001/updateScriptsCurrentPrice").subscribe(data => {
         setTimeout(() => {
           this.getAllScripts();
         }, 500)
@@ -144,14 +145,15 @@ export class HomeComponent {
   }
 
 
-  startProgram(id: any) {
+  startProgram(id: any, scriptName: any) {
 
     this.confirmationService.confirm({
-      message: 'Are you sure that you want to perform this action?',
+      message: `Are you sure you want to Start ${scriptName} Script?`,
       accept: () => {
         this.getData(`http://127.0.0.1:8001/StartProgram/${id}`).subscribe(data => {
         })
         this.updateScriptStatus(id, 1)
+        this.router.navigateByUrl("/StockAutoPilot")
       }
 
     });
@@ -193,19 +195,26 @@ export class HomeComponent {
   filterDateInViewForm() {
 
   }
-
+  // code for edit script
   updateScript(scriptForm: any) {
 
     scriptForm.id = this.scriptData.id
     scriptForm.scriptName = this.scriptData.scriptName
     console.log(scriptForm)
-    this.putData("http://127.0.0.1:8001/UpdateScriptById", scriptForm).subscribe(data => {
-      this.getAllScripts();
-      this.closeNav();
+    this.confirmationService.confirm({
+      message: `Updated Successfully `,
+      accept: () => {
+
+        this.putData("http://127.0.0.1:8001/UpdateScriptById", scriptForm).subscribe(data => {
+          this.getAllScripts();
+          this.closeNav();
+        })
+      }
     })
+
   }
 
-
+  //code for activeflag update
   updateStatus(id: any, status: any) {
     let data = { scriptId: id, activeStatus: status }
     this.postData("http://127.0.0.1:8001/UpdateActiveStatus", data).subscribe(response => {
@@ -218,10 +227,11 @@ export class HomeComponent {
 
   }
 
-
+  //get particular scriptt by id for view and edit form
   getScriptById(id: any, mode: any) {
 
     this.getData(`http://127.0.0.1:8001/GetScriptById/${id}`).subscribe(data => {
+      console.log(data)
       this.scriptData = data
       this.getTransactionById(id)
       this.getProfitByScriptById(id)
@@ -232,11 +242,11 @@ export class HomeComponent {
     }
     else if (mode == 2) {
       this.isOnEdit = true
-      this.openNav();
+      // this.openNav();
     }
 
   }
-
+  // to get all script code for dropdown
   getAlllScriptCodes() {
     this.getData("http://127.0.0.1:8001/GetAllScriptCode").subscribe(data => {
       this.scriptCodes = data
@@ -281,7 +291,7 @@ export class HomeComponent {
       this.scriptData = data
       this.confirmationService.confirm({
 
-        message: `Are you sure that you want to delete this script?${this.scriptData.scriptName} which was average bought at ${this.scriptData.avgPrice} at ${this.scriptData.currentprice} `,
+        message: `Are you sure that you want to delete this script?${this.scriptData.scriptName} which was average bought at ${this.scriptData.avgPrice} will be sold at ${this.scriptData.currentprice} `,
         accept: () => {
           const params = new HttpParams().set("id", id)
             .set("qty", this.scriptData.quantityBalance)
