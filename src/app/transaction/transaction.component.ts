@@ -25,7 +25,7 @@ export class TransactionComponent {
     this.orderstatus = ['Buy', 'Sell'];
   }
   getAllTransactions() {
-    this.getData("http://127.0.0.1:5000/GetTransactionForCurrentDate").subscribe(data => {
+    this.getData("http://127.0.0.1:8001/GetTransactionForCurrentDate").subscribe(data => {
       this.todaysTransactionList = data
       this.allTransactionList = data
       for (let transaction of this.todaysTransactionList) {
@@ -54,17 +54,17 @@ export class TransactionComponent {
       this.todaysTransactionList = this.allTransactionList
     }
     else if (this.fromDate !== "" && this.toDate == "") {
-      let d = new Date(this.fromDate)
-      this.todaysTransactionList = this.todaysTransactionList.filter((e: any) => e.orderDate >= d)
+      let d = new Date(new Date(this.fromDate).setHours(0, 0, 0, 0))
+      this.todaysTransactionList = this.todaysTransactionList.filter((e: any) => new Date(new Date(e.orderDate).setHours(0, 0, 0, 0)) >= d)
     }
     else if (this.toDate !== "" && this.fromDate == "") {
-      let d = new Date(this.toDate)
-      this.todaysTransactionList = this.todaysTransactionList.filter((e: any) => e.orderDate <= d)
+      let d = new Date(new Date(this.toDate).setHours(0, 0, 0, 0))
+      this.todaysTransactionList = this.todaysTransactionList.filter((e: any) => new Date(new Date(e.orderDate).setHours(0, 0, 0, 0)) <= d)
     }
     else if (this.fromDate != "" && this.toDate != "") {
-      let d1 = new Date(this.fromDate)
-      let d2 = new Date(this.toDate)
-      this.todaysTransactionList = this.todaysTransactionList.filter((e: any) => e.orderDate >= d1 && e.orderDate <= d2)
+      let d1 = new Date(new Date(this.fromDate).setHours(0, 0, 0, 0))
+      let d2 = new Date(new Date(this.toDate).setHours(0, 0, 0, 0))
+      this.todaysTransactionList = this.todaysTransactionList.filter((e: any) => new Date(new Date(e.orderDate).setHours(0, 0, 0, 0)) >= d1 && new Date(new Date(e.orderDate).setHours(0, 0, 0, 0)) <= d2)
     }
 
   }

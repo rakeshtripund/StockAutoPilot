@@ -42,13 +42,14 @@ export class HomeComponent {
   filterValue = '';
   allScriptsList: any = []
   selectedScriptCP: any
+  resetCriteriaInput: any
 
 
   constructor(private http: HttpClient, private confirmationService: ConfirmationService, public router: Router) { }
 
   ngOnInit(): void {
     this.obsTimer.subscribe(() => {
-      this.getData("http://127.0.0.1:5000/updateScriptsCurrentPrice").subscribe(data => {
+      this.getData("http://127.0.0.1:8001/updateScriptsCurrentPrice").subscribe(data => {
         setTimeout(() => {
           this.getAllScripts();
         }, 500)
@@ -89,8 +90,15 @@ export class HomeComponent {
 
   //post script data
   getFormData(formdata: any) {
+    console.log(formdata.specific)
+    if (!formdata.specificValue) {
+      formdata.specificValue = 0; // above code is to check if formdata.specificValue is present or not if not present then value must be 0
+    }
+    if (!formdata.marginalValue) {
+      formdata.marginalValue = 0; // above code is to check if formdata.specificValue is present or not if not present then value must be 0
+    }
     console.log(formdata)
-    this.postData("http://127.0.0.1:5000/InsertScript", formdata).subscribe(data => {
+    this.postData("http://127.0.0.1:8001/InsertScript", formdata).subscribe(data => {
       console.log(data);
       setTimeout(() => {
         this.getAllScripts(),
@@ -104,13 +112,12 @@ export class HomeComponent {
       }
     });
 
-
   }
 
 
   // get all script details
   getAllScripts() {
-    this.getData("http://127.0.0.1:5000/GetAllScripts").subscribe(data => {
+    this.getData("http://127.0.0.1:8001/GetAllScripts").subscribe(data => {
       this.scriptsList = data
       this.allScriptsList = data
       console.log(this.scriptsList)
@@ -155,6 +162,7 @@ export class HomeComponent {
   viewMasterPage() {
     this.isOnEdit = false
     this.isOnView = false
+    this.scriptData = {}
   }
 
   // code to run the script by play button
@@ -163,7 +171,7 @@ export class HomeComponent {
     this.confirmationService.confirm({
       message: `Are you sure you want to Start ${scriptName} Script?`,
       accept: () => {
-        this.getData(`http://127.0.0.1:5000/StartProgram/${id}`).subscribe(data => {
+        this.getData(`http://127.0.0.1:8001/StartProgram/${id}`).subscribe(data => {
         }, error => {
           if (error.status == 401) {
             console.log(error)
@@ -179,8 +187,19 @@ export class HomeComponent {
   updateScript(scriptForm: any) {
     scriptForm.id = this.scriptData.id
     scriptForm.scriptName = this.scriptData.scriptName
+    if (!scriptForm.specificValue) {
+      scriptForm.specificValue = 0; // above code is to check if formdata.specificValue is present or not if not present then value must be 0
+    }
+    if (!scriptForm.marginalValue) {
+      scriptForm.marginalValue = 0; // above code is to check if formdata.specificValue is present or not if not present then value must be 0
+    }
+    scriptForm.resetCriteria = this.resetCriteriaInput
+    scriptForm.marginalValue = this.scriptData.marginalValue
+    scriptForm.specificValue = this.scriptData.specificValue
     console.log(scriptForm)
-    this.putData("http://127.0.0.1:5000/UpdateScriptById", scriptForm).subscribe(data => {
+    console.log(this.scriptData.specificValue)
+    console.log(this.scriptData.marginalValue)
+    this.putData("http://127.0.0.1:8001/UpdateScriptById", scriptForm).subscribe(data => {
       this.getAllScripts();
     }, error => {
       if (error.status == 401) {
@@ -188,6 +207,7 @@ export class HomeComponent {
         this.router.navigate(["/StockAutoPilotLogin"])
       }
     })
+    this.resetCriteriaInput = ""
 
   }
   // filter for script name - start date on manage script form
@@ -223,15 +243,12 @@ export class HomeComponent {
     }
   }
 
-  filterDateInViewForm() {
-
-  }
 
 
   //code for activeflag update
   updateStatus(id: any, status: any) {
     let data = { scriptId: id, activeStatus: status }
-    this.postData("http://127.0.0.1:5000/UpdateActiveStatus", data).subscribe(response => {
+    this.postData("http://127.0.0.1:8001/UpdateActiveStatus", data).subscribe(response => {
       console.log(response)
     }, error => {
       if (error.status == 401) {
@@ -249,7 +266,7 @@ export class HomeComponent {
   //get particular script by id for view and edit form
   getScriptById(id: any, mode: any) {
 
-    this.getData(`http://127.0.0.1:5000/GetScriptById/${id}`).subscribe(data => {
+    this.getData(`http://127.0.0.1:8001/GetScriptById/${id}`).subscribe(data => {
       console.log(data)
       this.scriptData = data
       this.getTransactionById(id)
@@ -272,7 +289,7 @@ export class HomeComponent {
   }
   // to get all script code for dropdown
   getAlllScriptCodes() {
-    this.getData("http://127.0.0.1:5000/GetAllScriptCode").subscribe(data => {
+    this.getData("http://127.0.0.1:8001/GetAllScriptCode").subscribe(data => {
       this.scriptCodes = data
     }, error => {
       if (error.status == 401) {
@@ -283,7 +300,7 @@ export class HomeComponent {
   }
 
   getAllStatusCodes() {
-    this.getData("http://127.0.0.1:5000/GetAllScriptCode").subscribe(data => {
+    this.getData("http://127.0.0.1:8001/GetAllScriptCode").subscribe(data => {
       this.statusCodes = data
     }, error => {
       if (error.status == 401) {
@@ -295,7 +312,7 @@ export class HomeComponent {
   //get transactions details by id
   getTransactionById(id: any) {
 
-    this.getData(`http://127.0.0.1:5000/getTransactionById/${id}`).subscribe(data => {
+    this.getData(`http://127.0.0.1:8001/getTransactionById/${id}`).subscribe(data => {
       this.transactionData = data
       for (let transaction of this.transactionData) {
         if (transaction.orderType == 1) {
@@ -317,7 +334,7 @@ export class HomeComponent {
 
   //get current price by script id
   getCurrentPriceByScriptId(id: any) {
-    this.getData(`http://127.0.0.1:5000/getCurrentpriceByscriptId/${id}`).subscribe(data => {
+    this.getData(`http://127.0.0.1:8001/getCurrentpriceByscriptId/${id}`).subscribe(data => {
       this.CurrentPriceData = data
       console.log(data);
     }, error => {
@@ -331,7 +348,7 @@ export class HomeComponent {
 
   // delete script by id
   delete(id: any) {
-    this.getData(`http://127.0.0.1:5000/GetScriptById/${id}`).subscribe(data => {
+    this.getData(`http://127.0.0.1:8001/GetScriptById/${id}`).subscribe(data => {
       this.scriptData = data
       this.confirmationService.confirm({
 
@@ -340,7 +357,7 @@ export class HomeComponent {
           const params = new HttpParams().set("id", id)
             .set("qty", this.scriptData.quantityBalance)
             .set("scriptName", this.scriptData.scriptName)
-          this.deleteData("http://127.0.0.1:5000/DeleteScriptById", params).subscribe(data => {
+          this.deleteData("http://127.0.0.1:8001/DeleteScriptById", params).subscribe(data => {
             setTimeout(() => {
               this.getAllScripts();
             }, 500);
@@ -360,7 +377,7 @@ export class HomeComponent {
 
     const params = new HttpParams().set("id", id)
       .set("status", status)
-    this.getDataWithParams("http://127.0.0.1:5000/UpdateScriptStatusById", params).subscribe(data => {
+    this.getDataWithParams("http://127.0.0.1:8001/UpdateScriptStatusById", params).subscribe(data => {
 
       setTimeout(() => {
         this.getAllScripts();
@@ -376,7 +393,7 @@ export class HomeComponent {
   // code  to get current price for selected script 
   getCurrentPriceForSelectedScript(scriptName: any) {
     const params = new HttpParams().set("code", scriptName.code)
-    this.getDataWithParams("http://127.0.0.1:5000/currentPriceForSelectedScript", params).subscribe(data => {
+    this.getDataWithParams("http://127.0.0.1:8001/currentPriceForSelectedScript", params).subscribe(data => {
       this.selectedScriptCP = data
     }, error => {
       if (error.status == 401) {
@@ -389,7 +406,7 @@ export class HomeComponent {
   // CODE FOR  GET PROFIT BY SCRIPT ID
 
   getProfitByScriptById(id: any) {
-    this.getData(`http://127.0.0.1:5000
+    this.getData(`http://127.0.0.1:8001
     /getProfitByScriptId/${id}`).subscribe(data => {
       console.log(data);
     }, error => {
@@ -398,6 +415,17 @@ export class HomeComponent {
         this.router.navigate(["/StockAutoPilotLogin"])
       }
     })
+  }
+  // CODE FOR LOGOUT FUNCTIONALITY
+  logout() {
+    localStorage.removeItem("token");
+    this.router.navigate(["/StockAutoPilotLogin"]);
+  }
+
+  switchResetInputFields(value: any) {
+    // console.log(value)
+    // console.log(this.resetCriteriaInput)
+    this.resetCriteriaInput = value
   }
 
   getSelectedScript(scriptName: string) {

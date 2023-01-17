@@ -5,12 +5,19 @@
     <br />
     <div class="container">
         <div class="row">
-            <div class="col-md-10"></div>
-            <div class="col-md-2" align="right">
+            <div class="col-md-8"></div>
+
+            <div class="col-md-4" align="right">
+                <button type="button"
+                    style="background-color: #f06bac; margin-right: 8px ;border-color: #FB525A ;color: #fff;"
+                    class="btn btn mt-2 mb-2 px-3 " routerLink="/TransactionReport"><strong>Transaction
+                        Report</strong>
+                </button>
                 <button type="button" style="background-color: #f06bac; ;border-color: #FB525A ;color: #fff;"
-                    class="btn  float-end" routerLink="/TransactionReport"><strong>Transaction Report</strong>
+                    class="btn btn mt-2 mb-2 float-end" (click)="logout()"><strong>Logout</strong>
                 </button>
             </div>
+
         </div>
     </div>
     <div class="container bg-white p-3 mt-3" *ngIf="!isOnView && !isOnEdit" style="border-radius: 20px; width: 90%;box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px; border: 1px solid
@@ -38,7 +45,7 @@
                     <label for="startDate" class="p-2">Trade Created/Start Date</label>
                 </div>
             </div>
-            <div class="col-md-3">
+            <div class="col-md-2">
                 <div class="form-floating fs-6 ">
                     <select style="height: 25px;" class="form-select" id="floatingSelect" name="scriptActiveStatus"
                         aria-placeholder="Select Status" id="scriptActiveStatus" #scriptActiveStatus
@@ -50,10 +57,15 @@
                     <label for="floatingSelect">Select Status</label>
                 </div>
             </div>
-            <div class="col-md-1"></div>
+
+            <div class="col-md-2"></div>
+
             <div class="col-md-2" align="right">
+                <button type="button" pButton label="Clear"
+                    style="background-color: #FB525A ;border-color: #FB525A ;color: #fff;  ;"
+                    class="btn mt-2 mb-2 px-2 float-start  " icon="pi pi-filter-slash"></button>
                 <button type="button" style="background-color: #FB525A ;border-color: #FB525A ;color: #fff;"
-                    class="btn mt-2 mb-2 float-end" (click)="openNav()">
+                    class="btn mt-2 mb-2 px-1 float-end" (click)="openNav()">
                     <strong> Add Script</strong>
                 </button>
             </div>
@@ -347,35 +359,7 @@
                             <label class="form-label">Reset Criteria</label>
                         </div>
                         <div class="col-8">
-                            <!-- <div class="form-check">
-                            <input id="resetCriteria" #resetCriteria="ngModel" [(ngModel)]="scripts.resetCriteria"
-                             class="form-check-input" type="radio" checked
-                            [ngClass]="{'is-invalid': (scriptForm.submitted && resetCriteria.invalid && !flag) || (resetCriteria.invalid && resetCriteria.touched) && !flag }"
-                            name="resetCriteria">
-                            < label class="form-check-label">
-                              Spot Price
-                                < /label>
-                              </div>
 
-                              <div class="form-check">
-                              <input id="marginalBuyId" class="form-check-input" #resetCriteria="ngModel"
-                               [(ngModel)]="scripts.resetCriteria"
-                               [ngClass]="{'is-invalid': (scriptForm.submitted && resetCriteria.invalid && !flag) || (resetCriteria.invalid && resetCriteria.touched && !flag) }"
-                                name="resetCriteria" type="radio" name="resetCriteria">
-                               <label class="form-check-label">
-                                Marginal Buy
-                                  </label>
-                                < /div>
-
-                              <div class="form-check">
-                               <input id="specificValueId" class="form-check-input" #resetCriteria="ngModel"
-                                [(ngModel)]="scripts.resetCriteria"
-                                 [ngClass]="{'is-invalid': (scriptForm.submitted && resetCriteria.invalid && !flag ) || (resetCriteria.invalid && resetCriteria.touched && !flag) }"
-                                 name="resetCriteria" type="radio" name="resetCriteria">
-                                 <label class="form-check-label">
-                                Specific Value
-                                 </label>
-                                 </div> -->
                             <div class="form-check">
                                 <input class="form-check-input" type="radio" name="resetCriteria" id="resetCriteria1"
                                     #resetCriteria="ngModel" [(ngModel)]="scriptData.resetCriteria" value="1" checked>
@@ -389,18 +373,28 @@
                                 <label class="form-check-label" for="resetCriteria2">
                                     Marginal Buy
                                 </label>
+
+                                <br>
+                                <input id="marginalValue" class="form-control" #marginalValue="ngModel"
+                                    [(ngModel)]="scriptData.marginalValue" name="marginalValue" type="text"
+                                    *ngIf="scriptData.resetCriteria == 2 " placeholder="Enter Marginal Value"
+                                    style="width: 40%;">
+
                             </div>
+
                             <div class="form-check">
                                 <input class="form-check-input" type="radio" name="resetCriteria" id="resetCriteria3"
                                     #resetCriteria="ngModel" [(ngModel)]="scriptData.resetCriteria" value="3">
                                 <label class="form-check-label" for="resetCriteria3">
                                     Specific Value
                                 </label>
+                                <br>
+                                <input id="specificValue" class="form-control" #specificValue="ngModel"
+                                    [(ngModel)]="scriptData.specificValue" name="specificValue" type="text"
+                                    *ngIf="scriptData.resetCriteria == 3 " placeholder="Enter Specific Value"
+                                    style="width: 40%;">
 
-                                <div class="col-6 mt-2">
-                                    <input class="form-control" type="text" *ngIf="scriptData.resetCriteria == 3"
-                                        placeholder="Enter Specific Value" style="width: 90%;">
-                                </div>
+
                             </div>
 
                         </div>
@@ -497,62 +491,91 @@
                             <div class="col-lg-2 mb-1">
                                 <div class="form-floating text-muted fs-6">
                                     <input type="text" class="form-control" placeholder="Sell Limit"
-                                        #sellMargin="ngModel" name="sellMargin" [(ngModel)]="scripts.sellMargin"
-                                        type="text" [disabled]="isOnView" [(ngModel)]="scriptData.sellMargin"
-                                        style="border-radius: 12px; height: 50px;">
+                                        #sellMargin="ngModel" name="sellMargin" type="text" [disabled]="isOnView"
+                                        [(ngModel)]="scriptData.sellMargin" style="border-radius: 12px; height: 50px;">
                                     <label for="Sell Limit" class="p-2">Sell Limit</label>
                                 </div>
                             </div>
                             <div class="col-lg-2 mb-1">
                                 <div class="form-floating text-muted fs-6">
                                     <input type="text" class="form-control" placeholder="Quantity Balance"
-                                        #qtyBalance="ngModel" name="qtyBalance" [(ngModel)]="scripts.qtyBalance"
-                                        type="text" [disabled]="isOnView" [(ngModel)]="scriptData.quantityBalance"
+                                        #qtyBalance="ngModel" name="qtyBalance" type="text" [disabled]="isOnView"
+                                        [(ngModel)]="scriptData.quantityBalance"
                                         style="border-radius: 12px; height: 50px;">
                                     <label for="Quantity Balance" class="p-2">Quantity Balance </label>
                                 </div>
                             </div>
                         </div>
                         <div class="row">
-                            <div class="col-lg-4 mb-1">
+                            <div class="col-md-4 mb-1">
                                 <label for="Reset Criteria" class="p-2">Reset Criteria<span style="color: red;">
                                         *</span></label>
                                 <div class="form-floating text-muted fs-6">
+
                                     <div class="form-check form-check-inline">
                                         <!-- <input id="resetCriteria" #resetCriteria="ngModel" disabled
                                             [(ngModel)]="scripts.resetCriteria" class="form-check-input" type="radio"
                                             value="1" [checked]="true" name="resetCriteria"> -->
                                         <input class="form-check-input" type="radio" name="resetCriteria"
-                                            id="resetCriteria1" value="1" disabled
-                                            [checked]="scriptData.resetCriteria==1">
+                                            #resetCriteria1 id="resetCriteria1" value="1" [disabled]="isOnView"
+                                            (click)="switchResetInputFields(resetCriteria1.value)"
+                                            [checked]="scriptData.resetCriteria=='1'">
                                         <label class="form-check-label">
                                             Spot Price
                                         </label>
                                     </div>
                                     <div class="form-check form-check-inline">
-                                        <input id="marginalBuyId" class="form-check-input" #resetCriteria="ngModel"
-                                            [(ngModel)]="scripts.resetCriteria" value="2" disabled name="resetCriteria"
-                                            type="radio" name="resetCriteria" [checked]="scriptData.resetCriteria==2">
+                                        <input id="resetCriteria2" class="form-check-input" value="2" #resetCriteria2
+                                            [disabled]="isOnView" name="resetCriteria" type="radio" name="resetCriteria"
+                                            (click)="switchResetInputFields(resetCriteria2.value)"
+                                            [checked]="scriptData.resetCriteria=='2'">
                                         <label class="form-check-label">
                                             Marginal Buy
                                         </label>
+
                                     </div>
                                     <div class="form-check form-check-inline">
-                                        <input id="specificValueId" class="form-check-input" #resetCriteria="ngModel"
-                                            [(ngModel)]="scripts.resetCriteria" value="3" disabled name="resetCriteria"
-                                            type="radio" name="resetCriteria" [checked]="scriptData.resetCriteria==3">
+                                        <input id="resetCriteria3" class="form-check-input" value="3" #resetCriteria3
+                                            [disabled]="isOnView" name="resetCriteria" type="radio"
+                                            (click)="switchResetInputFields(resetCriteria3.value)"
+                                            [checked]="scriptData.resetCriteria=='3'">
                                         <label class="form-check-label">
                                             Specific Value
                                         </label>
+
+
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-lg-4 mb-1">
+                            <div class="col-md-2 ">
+
+                                <label *ngIf="resetCriteria.value=='2' || resetCriteriaInput==2 "
+                                    [hidden]="resetCriteriaInput==3 || resetCriteriaInput==1" for="Marginal Buy"
+                                    class="p-2">Marginal
+                                    Buy</label>
+                                <input type="text" name="marginalValue" #marginalValue="ngModel" [disabled]="isOnView"
+                                    [(ngModel)]="scriptData.marginalValue"
+                                    *ngIf="resetCriteria.value=='2' || resetCriteriaInput==2"
+                                    [hidden]="resetCriteriaInput==3 || resetCriteriaInput==1" class="form-control  "
+                                    placeholder="Enter Marginal Value">
+
+                                <label *ngIf="resetCriteria.value=='3' || resetCriteriaInput==3"
+                                    [hidden]="resetCriteriaInput==2 || resetCriteriaInput==1" for="Specific Buy"
+                                    class="p-2">Specific
+                                    Buy</label>
+                                <input type="text" name="specificValue" #specificValue="ngModel" [disabled]="isOnView"
+                                    [(ngModel)]="scriptData.specificValue"
+                                    [hidden]="resetCriteriaInput==2 || resetCriteriaInput==1"
+                                    *ngIf="resetCriteria.value=='3'|| resetCriteriaInput==3" class="form-control "
+                                    placeholder="Enter Specific Value">
+                            </div>
+
+                            <div class="col-md-3 mb-1">
                                 <label for="Exchange" class="p-2">Exchange<span style="color: red;">
                                         *</span></label>
                                 <div class="form-floating text-muted fs-6">
                                     <div class="form-check form-check-inline">
-                                        <input id="bse_exchange" #exchange="ngModel" [(ngModel)]="scripts.exchange"
+                                        <input id="bse_exchange" #exchange="ngModel" [(ngModel)]="scriptData.exchange"
                                             class="form-check-input" type="radio" value="1" disabled name="exchange">
                                         <label class="form-check-label">BSE</label>
                                     </div>
@@ -563,8 +586,8 @@
                                     </div><br /><br />
                                 </div>
                             </div>
-                            <div class="col-3 mt-5" align="right">
-                                <button type="button" pButton pRipple class="btn btn-outline-secondary float-end"
+                            <div class="col-2 mt-5" align="right">
+                                <button type="button" pButton pRipple class="btn btn-outline-secondary"
                                     (click)="updateScript(scriptForm.value)" *ngIf="isOnEdit"
                                     style="background-color:#FB525A ;color: #fff; ">Update</button>
                             </div>
@@ -574,6 +597,12 @@
                                     class="btn btn-outline-secondary float-end">Back</button>
                             </div>
                         </div>
+                        <div class="row">
+
+
+
+                        </div>
+
                     </div>
                     <!--END CODE FOR SCRIPT DETAILS-->
 
