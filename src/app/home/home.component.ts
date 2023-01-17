@@ -96,6 +96,12 @@ export class HomeComponent {
         this.getAllScripts(),
           500
       })
+    }, error => {
+      if (error.status == 401) {
+        console.log(error)
+        localStorage.removeItem("token")
+        this.router.navigate(["/StockAutoPilotLogin"])
+      }
     });
 
 
@@ -122,6 +128,11 @@ export class HomeComponent {
         }
         this.filterByStatus("1")
 
+      }
+    }, error => {
+      if (error.status == 401) {
+        console.log(error)
+        this.router.navigate(["/StockAutoPilotLogin"])
       }
     })
   }
@@ -153,26 +164,29 @@ export class HomeComponent {
       message: `Are you sure you want to Start ${scriptName} Script?`,
       accept: () => {
         this.getData(`http://127.0.0.1:5000/StartProgram/${id}`).subscribe(data => {
+        }, error => {
+          if (error.status == 401) {
+            console.log(error)
+            this.router.navigate(["/StockAutoPilotLogin"])
+          }
         })
-        // this.updateScriptStatus(id, 1)
-
+        this.updateScriptStatus(id, 1)
       }
-
     });
   }
 
   // code for edit script
   updateScript(scriptForm: any) {
-
-
     scriptForm.id = this.scriptData.id
     scriptForm.scriptName = this.scriptData.scriptName
     console.log(scriptForm)
     this.putData("http://127.0.0.1:5000/UpdateScriptById", scriptForm).subscribe(data => {
       this.getAllScripts();
-
-
-
+    }, error => {
+      if (error.status == 401) {
+        console.log(error)
+        this.router.navigate(["/StockAutoPilotLogin"])
+      }
     })
 
   }
@@ -219,6 +233,11 @@ export class HomeComponent {
     let data = { scriptId: id, activeStatus: status }
     this.postData("http://127.0.0.1:5000/UpdateActiveStatus", data).subscribe(response => {
       console.log(response)
+    }, error => {
+      if (error.status == 401) {
+        console.log(error)
+        this.router.navigate(["/StockAutoPilotLogin"])
+      }
     })
     setTimeout(() => {
       this.getAllScripts(),
@@ -235,6 +254,11 @@ export class HomeComponent {
       this.scriptData = data
       this.getTransactionById(id)
       this.getProfitByScriptById(id)
+    }, error => {
+      if (error.status == 401) {
+        console.log(error)
+        this.router.navigate(["/StockAutoPilotLogin"])
+      }
     })
 
     if (mode == 1) {
@@ -250,12 +274,22 @@ export class HomeComponent {
   getAlllScriptCodes() {
     this.getData("http://127.0.0.1:5000/GetAllScriptCode").subscribe(data => {
       this.scriptCodes = data
+    }, error => {
+      if (error.status == 401) {
+        console.log(error)
+        this.router.navigate(["/StockAutoPilotLogin"])
+      }
     })
   }
 
   getAllStatusCodes() {
     this.getData("http://127.0.0.1:5000/GetAllScriptCode").subscribe(data => {
       this.statusCodes = data
+    }, error => {
+      if (error.status == 401) {
+        console.log(error)
+        this.router.navigate(["/StockAutoPilotLogin"])
+      }
     })
   }
   //get transactions details by id
@@ -272,6 +306,11 @@ export class HomeComponent {
         }
       }
       console.log(this.transactionData)
+    }, error => {
+      if (error.status == 401) {
+        console.log(error)
+        this.router.navigate(["/StockAutoPilotLogin"])
+      }
     })
 
   }
@@ -281,6 +320,11 @@ export class HomeComponent {
     this.getData(`http://127.0.0.1:5000/getCurrentpriceByscriptId/${id}`).subscribe(data => {
       this.CurrentPriceData = data
       console.log(data);
+    }, error => {
+      if (error.status == 401) {
+        console.log(error)
+        this.router.navigate(["/StockAutoPilotLogin"])
+      }
     })
 
   }
@@ -304,6 +348,11 @@ export class HomeComponent {
           })
         }
       })
+    }, error => {
+      if (error.status == 401) {
+        console.log(error)
+        this.router.navigate(["/StockAutoPilotLogin"])
+      }
     })
   }
   // code for update script status for pause functionality
@@ -316,6 +365,11 @@ export class HomeComponent {
       setTimeout(() => {
         this.getAllScripts();
       }, 500);
+    }, error => {
+      if (error.status == 401) {
+        console.log(error)
+        this.router.navigate(["/StockAutoPilotLogin"])
+      }
     })
   }
 
@@ -324,6 +378,11 @@ export class HomeComponent {
     const params = new HttpParams().set("code", scriptName.code)
     this.getDataWithParams("http://127.0.0.1:5000/currentPriceForSelectedScript", params).subscribe(data => {
       this.selectedScriptCP = data
+    }, error => {
+      if (error.status == 401) {
+        console.log(error)
+        this.router.navigate(["/StockAutoPilotLogin"])
+      }
     })
   }
 
@@ -333,6 +392,11 @@ export class HomeComponent {
     this.getData(`http://127.0.0.1:5000
     /getProfitByScriptId/${id}`).subscribe(data => {
       console.log(data);
+    }, error => {
+      if (error.status == 401) {
+        console.log(error)
+        this.router.navigate(["/StockAutoPilotLogin"])
+      }
     })
   }
 

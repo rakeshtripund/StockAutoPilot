@@ -21,14 +21,14 @@
                         <form control="" class="form-group" #loginform="ngForm"
                             (ngSubmit)="getLoginFormData(loginform.value)">
                             <div class="row">
-                                <input type="text" name="username" id="username" class="form__input"
-                                    placeholder="Username">
+                                <input type="text" name="username" [(ngModel)]="loginForm.username" id="username"
+                                    class="form__input" placeholder="Username">
                             </div>
 
                             <div class="row">
                                 <!-- <span class="fa fa-lock"></span> -->
                                 <input type="password" name="password" id="password" class="form__input"
-                                    placeholder="Password">
+                                    [(ngModel)]="loginForm.password" placeholder="Password">
                             </div>
 
                             <div class="row ">

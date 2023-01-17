@@ -26,15 +26,15 @@
             </div>
             <div class="col-3">
                 <div class="form-floating text-muted fs-6">
-                    <input type="date" class="form-control" id="" placeholder="From Date" [(ngModel)]="filter.fromDate"
+                    <input type="date" class="form-control" id="" placeholder="From Date" [(ngModel)]="fromDate"
                         (ngModelChange)="filterDate()" style="border-radius: 12px; height: 50px;" name="">
                     <label for="" class="p-2">From Date</label>
                 </div>
             </div>
             <div class="col-3">
                 <div class="form-floating text-muted fs-6">
-                    <input type="date" class="form-control" id="" placeholder="To Date" [(ngModel)]="filter.toDate"
-                        style="border-radius: 12px; height: 50px;" name="">
+                    <input type="date" class="form-control" id="" placeholder="To Date" [(ngModel)]="toDate"
+                        (ngModelChange)="filterDate()" style="border-radius: 12px; height: 50px;" name="">
                     <label for="" class="p-2">To Date</label>
                 </div>
 
