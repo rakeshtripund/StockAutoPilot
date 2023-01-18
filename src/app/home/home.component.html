@@ -716,8 +716,8 @@
                             <ng-template pTemplate="body" let-transactiondetails>
                                 <tr>
                                     <td class="text-center">{{transactiondetails.scriptId}}</td>
-                                    <td class="text-center">{{transactiondetails.orderDate | date: 'shortDate'}}</td>
-                                    <td class="text-center">{{transactiondetails.orderDate | date:'mediumTime' }}</td>
+                                    <td class="text-center">{{transactiondetails.orderDate | date:'dd/MM/yyyy'}}</td>
+                                    <td class="text-center">{{transactiondetails.orderDate | date:'shortTime' }}</td>
                                     <td>{{transactiondetails.orderType}}</td>
                                     <td class="text-center">{{transactiondetails.buyMargin}}</td>
                                     <td class="text-center">{{transactiondetails.sellMargin}}</td>
