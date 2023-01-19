@@ -17,14 +17,26 @@
                     class="btn btn mt-2 mb-2 float-end" (click)="logout()"><strong>Logout</strong>
                 </button>
             </div>
+            <!--section for delete pop up-->
+            <p-confirmDialog #cd icon="pi pi-exclamation-triangle" [breakpoints]="{'960px': '30vw', '640px': '80vw'}"
+                [style]="{width: '30vw'}">
+                <ng-template pTemplate="header">
+                    <h5>Confirmation</h5>
+                </ng-template>
+                <ng-template pTemplate="footer">
+                    <button type="button" style="background-color:#b9b6af; color:#000 ;" pButton icon="pi pi-times"
+                        label="No" (click)="cd.reject()"></button>
+                    <button type="button" style="background-color:#f03d6d; color:#000 ;" pButton icon="pi pi-check"
+                        label="Yes" (click)="cd.accept()"></button>
+                </ng-template>
+            </p-confirmDialog>
 
         </div>
     </div>
     <div class="container bg-white p-3 mt-3" *ngIf="!isOnView && !isOnEdit" style="border-radius: 20px; width: 90%;box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px; border: 1px solid
         #FB525A!important;">
-        <!--section for delete pop up-->
-        <p-confirmDialog header="  Confirmation" icon="pi pi-exclamation-triangle"
-            [breakpoints]="{'960px': '30vw', '640px': '80vw'}" [style]="{width: '30vw'}"></p-confirmDialog>
+
+
 
 
         <!--Code for Filter Manage Script-->
@@ -499,7 +511,7 @@
                             <div class="col-lg-2 mb-1">
                                 <div class="form-floating text-muted fs-6">
                                     <input type="text" class="form-control" placeholder="Quantity Balance"
-                                        #qtyBalance="ngModel" name="qtyBalance" type="text" [disabled]="isOnView"
+                                        #qtyBalance="ngModel" name="qtyBalance" type="text" disabled=""
                                         [(ngModel)]="scriptData.quantityBalance"
                                         style="border-radius: 12px; height: 50px;">
                                     <label for="Quantity Balance" class="p-2">Quantity Balance </label>

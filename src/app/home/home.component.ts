@@ -203,16 +203,21 @@ export class HomeComponent {
     console.log(scriptForm)
     console.log(this.scriptData.specificValue)
     console.log(this.scriptData.marginalValue)
-    this.putData("http://127.0.0.1:5000/UpdateScriptById", scriptForm).subscribe(data => {
-      this.getAllScripts();
-    }, error => {
-      if (error.status == 401) {
-        console.log(error)
-        this.router.navigate(["/StockAutoPilotLogin"])
-      }
-    })
-    this.resetCriteriaInput = ""
 
+    this.confirmationService.confirm({
+      message: `Are you sure you want to Update the Script`,
+      accept: () => {
+        this.putData("http://127.0.0.1:5000/UpdateScriptById", scriptForm).subscribe(data => {
+          this.getAllScripts();
+        }, error => {
+          if (error.status == 401) {
+            console.log(error)
+            this.router.navigate(["/StockAutoPilotLogin"])
+          }
+        })
+        this.resetCriteriaInput = ""
+      }
+    });
   }
   // filter for script name - start date on manage script form
   onFilter(num: number) {
