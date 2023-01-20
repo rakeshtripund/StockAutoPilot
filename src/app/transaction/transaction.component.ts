@@ -25,7 +25,7 @@ export class TransactionComponent {
     this.orderstatus = ['Buy', 'Sell'];
   }
   getAllTransactions() {
-    this.getData("http://127.0.0.1:5000/GetTransactionForCurrentDate").subscribe(data => {
+    this.getData("http://127.0.0.1:8001/GetTransactionForCurrentDate").subscribe(data => {
       this.todaysTransactionList = data
       this.allTransactionList = data
       for (let transaction of this.todaysTransactionList) {
@@ -37,13 +37,13 @@ export class TransactionComponent {
           transaction.orderType = "Sell"
         }
       }
+      this.filterTodaysDate();
     }, error => {
       if (error.status == 401) {
         console.log(error)
         this.router.navigate(["/StockAutoPilotLogin"])
       }
     })
-
   }
 
   filterDate() {
@@ -51,6 +51,7 @@ export class TransactionComponent {
     console.log("to Date", this.toDate)
     this.todaysTransactionList = this.allTransactionList
     if (this.fromDate == "" && this.toDate == "") {
+      let d = new Date(new Date().setHours(0, 0, 0, 0))
       this.todaysTransactionList = this.allTransactionList
     }
     else if (this.fromDate !== "" && this.toDate == "") {
@@ -66,7 +67,10 @@ export class TransactionComponent {
       let d2 = new Date(new Date(this.toDate).setHours(0, 0, 0, 0))
       this.todaysTransactionList = this.todaysTransactionList.filter((e: any) => new Date(new Date(e.orderDate).setHours(0, 0, 0, 0)) >= d1 && new Date(new Date(e.orderDate).setHours(0, 0, 0, 0)) <= d2)
     }
-
+  }
+  filterTodaysDate() {
+    let d = new Date(new Date(Date.now()))
+    this.todaysTransactionList = this.todaysTransactionList.filter((e: any) => e.orderDate.toDateString() === d.toDateString())
   }
   getData(url: string,) {
     return this.http.get(url);
