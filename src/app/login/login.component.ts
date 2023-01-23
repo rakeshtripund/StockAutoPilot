@@ -19,7 +19,7 @@ export class LoginComponent {
 
   getLoginFormData(formdata: any) {
     console.log(formdata)
-    this.postData("http://127.0.0.1:8001/authenticate", formdata).subscribe(response => {
+    this.postData("http://127.0.0.1:5000/authenticate", formdata).subscribe(response => {
       this.token = response
       localStorage.setItem("token", this.token.token)
       this.router.navigate(["/StockAutoPilot"])

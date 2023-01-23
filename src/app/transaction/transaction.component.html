@@ -10,7 +10,7 @@
         <div class="row">
             <div class="col-md-10">
                 <div class="d-flex  justify-content-between">
-                    <p class="fs-4 mt-2"> <strong> Today's Transaction Report</strong> </p>
+                    <p class="fs-4 mt-2"> <strong> Transaction Report</strong> </p>
                 </div>
             </div>
 
@@ -51,10 +51,13 @@
                     </div>
                 </div> -->
                 <div class="row">
-                    <div class="col-4"></div>
-                    <div class="col-8">
+                    <div class="col-3"> <button type="button" pButton
+                            style="background-color: #FB525A  ; width:95px; color: #fff; "
+                            class="btn btn-outline-secondary " icon="pi pi-filter-slash"> Clear</button>
+                    </div>
+                    <div class="col-9">
                         <button type="button" routerLink="/StockAutoPilot"
-                            style="width:70%; background-color:#FB525A ;color: #fff;"
+                            style="width:75px; background-color:#FB525A ;color: #fff;"
                             class="btn btn-outline-secondary">Back</button>
                     </div>
                 </div>
@@ -75,9 +78,25 @@
                         [globalFilterFields]="['scriptId','scriptName','orderDate', 'orderType','qty_slab','buyTarget','sellTarget','qtyBalance','scriptFundBalance','profit','buyRate']"
                         sortField="" [sortOrder]="-1">
                         <ng-template pTemplate="caption">
-                            <div class="d-flex justify-content-between">
-                                <p class="fs-5 mt-2"> Transaction Detail Report</p>
+                            <div class="row">
+                                <div class="col-md-9">
+                                    <div class="d-flex justify-content-between">
+                                        <p class="fs-5 mt-2"> Transaction Detail Report</p>
+                                    </div>
+                                </div>
+                                <div class="col-md-3 ">
+                                    <div class="d-flex justify-content-between">
+                                        <strong>
+                                            <h1 style=" color: rgb(2, 114, 2);" class="fs-5 mt-2">
+                                                Result :-
+                                                {{todaysProfit}}</h1>
+
+                                        </strong>
+                                    </div>
+                                </div>
+
                             </div>
+
                         </ng-template>
 
                         <ng-template pTemplate="header">
@@ -149,7 +168,6 @@
                                 <th></th>
                                 <th></th>
 
-
                                 <th></th>
                                 <th>
                                     <p-columnFilter field="orderType" matchMode="equals" [showMenu]="false">
@@ -182,7 +200,10 @@
                                 <td class="text-center">{{todaysList.scriptId}}</td>
                                 <td class="text-center">{{todaysList.scriptName}}</td>
                                 <td class="text-center">{{todaysList.orderDate | date:'dd/MM/yyyy'}}</td>
-                                <td class="text-center">{{todaysList.orderType}}</td>
+                                <td class="text-center"><span
+                                        [class]="'customer-badge status-' + todaysList.orderType">{{todaysList.orderType}}</span>
+                                </td>
+
                                 <td class="text-center">{{todaysList.qtySlab}}</td>
                                 <td class="text-center">{{todaysList.buyTarget | number : '1.2-2'}}</td>
                                 <td class="text-center">{{todaysList.sellTarget | number: '1.2-2'}}</td>

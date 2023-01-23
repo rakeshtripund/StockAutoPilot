@@ -44,6 +44,63 @@ form .form-label {
     float: right;
 }
 
+.status-Buy {
+    background-color: #9bebb5;
+    color: rgb(42, 109, 3);
+    border-radius: 2px;
+    padding: 0.25em 0.5rem;
+    text-transform: uppercase;
+    font-weight: 700;
+    font-size: 12px;
+    letter-spacing: .3px;
+}
+
+.status-Sell {
+    background-color: #f07676;
+    color: rgb(246, 6, 6);
+    border-radius: 2px;
+    padding: 0.25em 0.5rem;
+    text-transform: uppercase;
+    font-weight: 700;
+    font-size: 12px;
+    letter-spacing: .3px;
+}
+
+.activeFlag-Paused {
+    background-color: #eccfff;
+    color: #694382;
+    border-radius: 2px;
+    padding: 0.25em 0.5rem;
+    text-transform: uppercase;
+    font-weight: 700;
+    font-size: 12px;
+    letter-spacing: .3px;
+}
+
+.activeFlag-Saved {
+    background-color: #9bebb5;
+    color: rgb(42, 109, 3);
+    border-radius: 2px;
+    padding: 0.25em 0.5rem;
+    text-transform: uppercase;
+    font-weight: 700;
+    font-size: 12px;
+    letter-spacing: .3px;
+}
+
+.activeFlag-Live {
+    background-color: #f07676;
+    color: rgb(246, 6, 6);
+    border-radius: 2px;
+    padding: 0.25em 0.5rem;
+    text-transform: uppercase;
+    font-weight: 700;
+    font-size: 12px;
+    letter-spacing: .3px;
+}
+
+
+
 :host ::ng-deep .p-datatable .p-datatable-tbody>tr>td {
     padding: 8px !important;
 }

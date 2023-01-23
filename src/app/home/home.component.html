@@ -73,7 +73,7 @@
             <div class="col-md-2"></div>
 
             <div class="col-md-2" align="right">
-                <button type="button" pButton label="Clear"
+                <button type="button" pButton label="Clear" (click)="resetFilter()"
                     style="background-color: #FB525A ;border-color: #FB525A ;color: #fff;  ;"
                     class="btn mt-2 mb-2 px-2 float-start  " icon="pi pi-filter-slash"></button>
                 <button type="button" style="background-color: #FB525A ;border-color: #FB525A ;color: #fff;"
@@ -489,7 +489,7 @@
                                     <input type="text" class="form-control" placeholder="Investment Amount"
                                         [(ngModel)]="scriptData.investmentBalance" name="investmentBalance"
                                         style="border-radius: 12px; height: 50px;" [disabled]="isOnView">
-                                    <label for="Investment Amount" class="p-2">Investment Balance</label>
+                                    <label for="Investment Amount" class="p-2">Investment Balance (₹)</label>
                                 </div>
                             </div>
                             <div class="col-lg-2 mb-1">
@@ -497,7 +497,7 @@
                                     <input type="text" class="form-control" placeholder="Buy Limit" name="buyMargin"
                                         style="border-radius: 12px; height: 50px;" required [disabled]="isOnView"
                                         [(ngModel)]="scriptData.buyMargin">
-                                    <label for="Buy Limit" class="p-2">Buy Limit</label>
+                                    <label for="Buy Limit" class="p-2">Buy Limit %</label>
                                 </div>
                             </div>
                             <div class="col-lg-2 mb-1">
@@ -505,7 +505,7 @@
                                     <input type="text" class="form-control" placeholder="Sell Limit"
                                         #sellMargin="ngModel" name="sellMargin" type="text" [disabled]="isOnView"
                                         [(ngModel)]="scriptData.sellMargin" style="border-radius: 12px; height: 50px;">
-                                    <label for="Sell Limit" class="p-2">Sell Limit</label>
+                                    <label for="Sell Limit" class="p-2">Sell Limit % </label>
                                 </div>
                             </div>
                             <div class="col-lg-2 mb-1">
@@ -601,12 +601,12 @@
                             <div class="col-2 mt-5" align="right">
                                 <button type="button" pButton pRipple class="btn btn-outline-secondary"
                                     (click)="updateScript(scriptForm.value)" *ngIf="isOnEdit"
-                                    style="background-color:#FB525A ;color: #fff; ">Update</button>
+                                    style="background-color:#FB525A ;color: #fff; width: 90px; "><strong>Update</strong></button>
                             </div>
                             <div class="col-1  mt-5" *ngIf="isOnView||isOnEdit">
                                 <button type="reset" (click)="viewMasterPage()"
-                                    style=" background-color:#FB525A ;color: #fff;"
-                                    class="btn btn-outline-secondary float-end">Back</button>
+                                    style=" background-color:#FB525A ;color: #fff; width: 90px;"
+                                    class="btn btn-outline-secondary float-end"><strong>Back</strong></button>
                             </div>
                         </div>
                         <div class="row">
@@ -730,7 +730,10 @@
                                     <td class="text-center">{{transactiondetails.scriptId}}</td>
                                     <td class="text-center">{{transactiondetails.orderDate | date:'dd/MM/yyyy'}}</td>
                                     <td class="text-center">{{transactiondetails.orderDate | date:'shortTime' }}</td>
-                                    <td>{{transactiondetails.orderType}}</td>
+                                    <td><span
+                                            [class]="'customer-badge status-' + transactiondetails.orderType">{{transactiondetails.orderType}}</span>
+                                    </td>
+
                                     <td class="text-center">{{transactiondetails.buyMargin}}</td>
                                     <td class="text-center">{{transactiondetails.sellMargin}}</td>
                                     <td class="text-center">{{transactiondetails.qtySlab}}</td>
