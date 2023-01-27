@@ -196,8 +196,11 @@
                                     {{scripts.currentprice | number : '1.2-2'}}
                                 </td>
                                 <td class="text-center">
-                                    <span *ngIf="scripts.deal>0">{{scripts.deal|number : '1.2-2'}}</span>
-                                    <span *ngIf="scripts.deal<0">{{scripts.deal|number: '1.2-2'}}</span>
+                                    <span style="color: green; 
+                                    " *ngIf="scripts.deal>0">{{scripts.deal|number :
+                                        '1.2-2'}}</span>
+                                    <span style="color: red;" *ngIf="scripts.deal<0">{{scripts.deal|number:
+                                        '1.2-2'}}</span>
                                     <span *ngIf="scripts.deal==0">{{scripts.deal}}</span>
                                 </td>
                                 <td> <span
@@ -301,11 +304,10 @@
                                 <ng-template pTemplate="filter" let-options="options">
                                     <div class="flex p-3">
                                         <div class="p-inputgroup" (click)="$event.stopPropagation()">
-                                            <span class="p-inputgroup-addon"><i class="pi pi-search"></i></span>
+                                            <span class="p-inputgroup-addon"><i class="pi p i-search"></i></span>
                                             <input type="text" pInputText placeholder="Filter" name="filterValue"
                                                 [(ngModel)]="filterValue" (keyup)="options.filter($event)">
-                                            <button style="padding: 20px;" pButton icon="pi pi-times"
-                                                class="ml-3"></button>
+                                            <a style="padding: 20px;" pButton icon="pi pi-times" class="ml-3"></a>
                                         </div>
                                     </div>
                                 </ng-template>
@@ -390,7 +392,7 @@
                                 <input id="marginalValue" class="form-control" #marginalValue="ngModel"
                                     [(ngModel)]="scriptData.marginalValue" name="marginalValue" type="text"
                                     *ngIf="scriptData.resetCriteria == 2 " placeholder="Enter Marginal Value"
-                                    style="width: 40%;">
+                                    style="width: 40%; margin-top: 5px;">
 
                             </div>
 
@@ -404,7 +406,47 @@
                                 <input id="specificValue" class="form-control" #specificValue="ngModel"
                                     [(ngModel)]="scriptData.specificValue" name="specificValue" type="text"
                                     *ngIf="scriptData.resetCriteria == 3 " placeholder="Enter Specific Value"
-                                    style="width: 40%;">
+                                    style="width: 40%; margin-top: 5px;">
+
+
+                            </div>
+
+                        </div>
+                    </div>
+
+                    <div class="row mt-2">
+                        <div class="col-4">
+                            <label class="form-label">StopLoss</label>
+                        </div>
+                        <div class="col-8">
+
+
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="stop_loss" id="stop_loss1"
+                                    #stop_loss="ngModel" [(ngModel)]="scriptData.stop_loss" value="1">
+                                <label class="form-check-label" for="stop_loss1">
+                                    Percentage (%)
+                                </label>
+
+                                <br>
+                                <input id="stop_loss_percentage" class="form-control" #stop_loss_percentage="ngModel"
+                                    [(ngModel)]="scriptData.stop_loss_percentage" name="stop_loss_percentage"
+                                    type="text" *ngIf="scriptData.stop_loss == 1 " placeholder="Enter percentage "
+                                    style="width: 40%; margin-top: 5px;">
+
+                            </div>
+
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="stop_loss" id="stop_loss2"
+                                    #stop_loss="ngModel" [(ngModel)]="scriptData.stop_loss" value="2">
+                                <label class="form-check-label" for="stop_loss2">
+                                    Loss Value
+                                </label>
+                                <br>
+                                <input id="stop_loss_value" class="form-control" #stop_loss_value="ngModel"
+                                    [(ngModel)]="scriptData.stop_loss_value" name="stop_loss_value" type="text"
+                                    *ngIf="scriptData.stop_loss == 2 " placeholder="Enter Stop Loss Value"
+                                    style="width: 40%; margin-top: 5px;">
 
 
                             </div>
@@ -430,6 +472,9 @@
                             </div>
                         </div>
                     </div>
+
+
+
                     <div class="row mt-2">
                         <div class="col-4"></div>
                         <div class="col-6">
@@ -559,6 +604,36 @@
                                     </div>
                                 </div>
                             </div>
+                            <div class="col-md-3 mb-1">
+                                <label for="stoploss" class="p-2">StopLoss<span style="color: red;">
+                                        *</span></label>
+
+
+                                <div class="form-floating text-muted fs-6">
+
+                                    <div class="form-check form-check-inline">
+
+                                        <input type="radio" id="stop_loss1" class="form-check-input" name="stop_loss"
+                                            #stop_loss1 value="1" [disabled]="isOnView"
+                                            (click)="switchStoplossInputFields(stop_loss1.value)"
+                                            [checked]="scriptData.stop_loss=='1'">
+                                        <label class="form-check-label">
+                                            Enter Stoploss Percentage
+                                        </label>
+                                    </div>
+                                    <div class="form-check form-check-inline">
+                                        <input type="radio" id="stop_loss2" class="form-check-input" value="2"
+                                            #stop_loss2 [disabled]="isOnView" name="stop_loss"
+                                            (click)="switchStoplossInputFields(stop_loss2.value)"
+                                            [checked]="scriptData.stop_loss=='2'">
+                                        <label class="form-check-label">
+                                            Enter StopLoss Value
+                                        </label>
+
+                                    </div>
+
+                                </div>
+                            </div>
                             <div class="col-md-2 ">
 
                                 <label *ngIf="resetCriteria.value=='2' || resetCriteriaInput==2 "
@@ -580,11 +655,28 @@
                                     [hidden]="resetCriteriaInput==2 || resetCriteriaInput==1"
                                     *ngIf="resetCriteria.value=='3'|| resetCriteriaInput==3" class="form-control "
                                     placeholder="Enter Specific Value">
+                                <!--STOP LOSS RADIO BUTTONS-->
+
+                                <label *ngIf="stop_loss.value=='1' || stop_loss_input==1 " [hidden]="stop_loss_input==2"
+                                    for="Percentage " class="p-2">Percentage </label>
+                                <input type="text" name="stop_loss_percentage" #stop_loss_percentage="ngModel"
+                                    [disabled]="isOnView" [(ngModel)]="scriptData.stop_loss_percentage"
+                                    *ngIf="stop_loss.value=='1' || stop_loss_input==1" [hidden]="stop_loss_input==2 "
+                                    class="form-control  " placeholder="Enter Percentage">
+
+                                <label *ngIf="stop_loss.value=='2' || stop_loss_input==2" [hidden]="stop_loss_input==1"
+                                    for="Stop loss value" class="p-2">Stoploss
+                                    Value</label>
+                                <input type="text" name="stop_loss_value" #stop_loss_value="ngModel"
+                                    [disabled]="isOnView" [(ngModel)]="scriptData.stop_loss_value"
+                                    [hidden]=" stop_loss_input==1"
+                                    *ngIf="scriptData.stop_loss=='2' || stop_loss_input==2" class="form-control "
+                                    placeholder="Enter Stoploss Value">
+
                             </div>
 
-                            <div class="col-md-3 mb-1">
-                                <label for="Exchange" class="p-2">Exchange<span style="color: red;">
-                                        *</span></label>
+                            <div class="col-md-1 mb-1">
+                                <label for="Exchange" class="p-2">Exchange</label>
                                 <div class="form-floating text-muted fs-6">
                                     <div class="form-check form-check-inline">
                                         <input id="bse_exchange" #exchange="ngModel" [(ngModel)]="scriptData.exchange"
@@ -598,7 +690,7 @@
                                     </div><br /><br />
                                 </div>
                             </div>
-                            <div class="col-2 mt-5" align="right">
+                            <div class="col-1 mt-5" align="right">
                                 <button type="button" pButton pRipple class="btn btn-outline-secondary"
                                     (click)="updateScript(scriptForm.value)" *ngIf="isOnEdit"
                                     style="background-color:#FB525A ;color: #fff; width: 90px; "><strong>Update</strong></button>
@@ -646,7 +738,7 @@
                                             Start Time
                                         </div>
                                     </th>
-                                    <th pSortableColumn="orderType" style="width: 5%; ">
+                                    <th pSortableColumn="orderType" style="width: 2%; ">
                                         <div class="flex justify-content-between align-items-center ">
                                             Order Type
                                         </div>
@@ -686,6 +778,11 @@
                                             Script Fund Balance
                                         </div>
                                     </th>
+                                    <th pSortableColumn="script_fund_balance" style="width: 12%; ">
+                                        <div class="flex justify-content-between align-items-center text-center">
+                                            Transaction Price
+                                        </div>
+                                    </th>
                                     <th pSortableColumn="profit_loss" style="width: 8%; ">
                                         <div class="flex justify-content-between align-items-center text-center">
                                             Profit/Loss
@@ -723,6 +820,7 @@
                                     <th></th>
                                     <th></th>
                                     <th></th>
+                                    <th></th>
                                 </tr>
                             </ng-template>
                             <ng-template pTemplate="body" let-transactiondetails>
@@ -742,17 +840,12 @@
                                     <td class="text-center">{{transactiondetails.qtyBalance}}</td>
                                     <td class="text-center">{{transactiondetails.scriptFundBalance | number: '1.2-2'}}
                                     </td>
-                                    <td class="text-center">{{transactiondetails.profit | number: '1.2-2'}}</td>
+                                    <td class="text-center">{{transactiondetails.buyRate | number: '1.2-2'}}
+                                    </td>
+                                    <td style="color: green;" class="text-center">{{transactiondetails.profit | number:
+                                        '1.2-2'}}</td>
                                     <td class="text-center">{{transactiondetails.buyRate}}</td>
-                                    <!-- <td style="width:4px ;"><a (click)="viewScriptById(1)"><i title="View"
-                                            class="pi pi-eye"></i></a>
-                                </td>
-                                <td style="width:4px ;"><a (click)="editScriptById(1)"><i title="Edit"
-                                            class="pi pi-pencil"></i></a>
-                                </td>
 
-                                <td style="width:4px ;"><a><i title="Delete" class="pi pi-trash"></i></a>
-                                </td> -->
                                 </tr>
                             </ng-template>
                             <ng-template pTemplate="emptymessage">

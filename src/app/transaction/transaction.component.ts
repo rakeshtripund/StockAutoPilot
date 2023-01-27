@@ -10,24 +10,26 @@ import { Router } from '@angular/router';
 export class TransactionComponent {
   todaysTransactionList: any;
   todaysList: any;
-
-  filter: any = [];
+  filter: any;
   allTransactionList: any;
   orderstatus: any
   fromDate: any
+  scriptsList: any;
   toDate: any
   todaysProfit: any
-
+  scriptName: any
   constructor(private http: HttpClient, private router: Router) { }
   ngOnInit(): void {
     this.todaysList = {}
     this.fromDate = ""
     this.toDate = ""
+    this.filter = []
+    // this.trans_filter();
     this.getAllTransactions();
     this.orderstatus = ['Buy', 'Sell'];
   }
   getAllTransactions() {
-    this.getData("http://127.0.0.1:5000/GetTransactionForCurrentDate").subscribe(data => {
+    this.getData("http://127.0.0.1:8001/GetTransactionForCurrentDate").subscribe(data => {
       console.log(data)
       this.getTodaysProfit();
       this.todaysTransactionList = data
@@ -50,9 +52,22 @@ export class TransactionComponent {
       }
     })
   }
+  onFilter(num: number) {
+    if (this.filter.scriptName === '') {
+      this.todaysTransactionList = this.todaysTransactionList;
+    } else {
+      this.todaysTransactionList = this.todaysTransactionList;
+      if (num === 1) {
+        const scriptName = this.filter.scriptName;
+        this.todaysTransactionList = this.todaysTransactionList.filter((e: any) => e.scriptName.toString().includes(scriptName));
+      }
+    }
+  }
+
 
 
   filterDate() {
+    this.todaysProfit = 0
     console.log("from Date", this.fromDate)
     console.log("to Date", this.toDate)
     this.todaysTransactionList = this.allTransactionList
@@ -62,19 +77,28 @@ export class TransactionComponent {
     }
     else if (this.fromDate !== "" && this.toDate == "") {
       let d = new Date(new Date(this.fromDate).setHours(0, 0, 0, 0))
-      this.getProfitByDateRange(d, "")
+      // this.getProfitByDateRange(d, "")
       this.todaysTransactionList = this.todaysTransactionList.filter((e: any) => new Date(new Date(e.orderDate).setHours(0, 0, 0, 0)) >= d)
+      for (let i of this.todaysTransactionList) {
+        this.todaysProfit += Number(i.profit)
+      }
     }
     else if (this.toDate !== "" && this.fromDate == "") {
       let d = new Date(new Date(this.toDate).setHours(0, 0, 0, 0))
-      this.getProfitByDateRange("", d)
+      // this.getProfitByDateRange("", d)
       this.todaysTransactionList = this.todaysTransactionList.filter((e: any) => new Date(new Date(e.orderDate).setHours(0, 0, 0, 0)) <= d)
+      for (let i of this.todaysTransactionList) {
+        this.todaysProfit += Number(i.profit)
+      }
     }
     else if (this.fromDate != "" && this.toDate != "") {
       let d1 = new Date(new Date(this.fromDate).setHours(0, 0, 0, 0))
       let d2 = new Date(new Date(this.toDate).setHours(0, 0, 0, 0))
-      this.getProfitByDateRange(d1, d2);
+      // this.getProfitByDateRange(d1, d2);
       this.todaysTransactionList = this.todaysTransactionList.filter((e: any) => new Date(new Date(e.orderDate).setHours(0, 0, 0, 0)) >= d1 && new Date(new Date(e.orderDate).setHours(0, 0, 0, 0)) <= d2)
+      for (let i of this.todaysTransactionList) {
+        this.todaysProfit += Number(i.profit)
+      }
     }
   }
   filterTodaysDate() {
@@ -83,7 +107,7 @@ export class TransactionComponent {
   }
 
   getTodaysProfit() {
-    this.getData("http://127.0.0.1:5000/getTodaysProfit").subscribe(data => {
+    this.getData("http://127.0.0.1:8001/getTodaysProfit").subscribe(data => {
       console.log(data)
       this.todaysProfit = data
     })
@@ -91,7 +115,7 @@ export class TransactionComponent {
 
   getProfitByDateRange(fromDate: any, toDate: any) {
     const params = new HttpParams().set("fromDate", fromDate).set("toDate", toDate)
-    this.getDataWithParams("http://127.0.0.1:5000/GetProfitByDateRange", params).subscribe(data => {
+    this.getDataWithParams("http://127.0.0.1:8001/GetProfitByDateRange", params).subscribe(data => {
       console.log(data)
       this.todaysProfit = data
     })

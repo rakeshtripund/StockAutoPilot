@@ -20,7 +20,8 @@
             <div class="col-3">
                 <div class="form-floating text-muted fs-6">
                     <input type="text" class="form-control" id="scriptName" placeholder="pan"
-                        style="border-radius: 12px; height: 50px;" name="scriptName">
+                        style="border-radius: 12px; height: 50px;" name="scriptName" [(ngModel)]="filter.scriptName"
+                        (ngModelChange)="onFilter(1)">
                     <label for="scriptName" class="p-2">Script Name</label>
                 </div>
             </div>
@@ -72,9 +73,10 @@
 
             <div class="row ps-1">
                 <div class="px-3">
-                    <p-table id="scriptsList" dataKey="id" [value]="todaysTransactionList" [rowHover]="true" [rows]="25"
-                        [showCurrentPageReport]="true" [rowsPerPageOptions]="[25,50,100,150]" responsiveLayout="scroll"
-                        [paginator]="true" [filterDelay]="0" [style]="{'float':'right !important'}"
+                    <p-table id="todaysTransactionList" dataKey="id" [value]="todaysTransactionList" [rowHover]="true"
+                        [rows]="25" [showCurrentPageReport]="true" [rowsPerPageOptions]="[25,50,100,150]"
+                        responsiveLayout="scroll" [paginator]="true" [filterDelay]="0"
+                        [style]="{'float':'right !important'}"
                         [globalFilterFields]="['scriptId','scriptName','orderDate', 'orderType','qty_slab','buyTarget','sellTarget','qtyBalance','scriptFundBalance','profit','buyRate']"
                         sortField="" [sortOrder]="-1">
                         <ng-template pTemplate="caption">
@@ -89,7 +91,7 @@
                                         <strong>
                                             <h1 style=" color: rgb(2, 114, 2);" class="fs-5 mt-2">
                                                 Result :-
-                                                {{todaysProfit}}</h1>
+                                                {{todaysProfit| number : '1.2-2'}}</h1>
 
                                         </strong>
                                     </div>
@@ -209,7 +211,16 @@
                                 <td class="text-center">{{todaysList.sellTarget | number: '1.2-2'}}</td>
                                 <td class="text-center">{{todaysList.qtyBalance}}</td>
                                 <td class="text-center"> {{todaysList.scriptFundBalance | number: '1.2-2'}}</td>
-                                <td class="text-center">{{todaysList.profit | number: '1.2-2'}}</td>
+
+                                <td class="text-center">
+                                    <span style="color: green; 
+                                    " *ngIf="todaysList.profit>0">{{todaysList.profit|number :
+                                        '1.2-2'}}</span>
+                                    <span style="color: red;" *ngIf="todaysList.profit<0">{{todaysList.profit|number:
+                                        '1.2-2'}}</span>
+                                    <span *ngIf="todaysList.profit==0">{{todaysList.profit}}</span>
+
+                                </td>
                                 <td class="text-center">{{todaysList.buyRate | number: '1.2-2'}}</td>
 
 

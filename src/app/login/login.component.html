@@ -30,6 +30,9 @@
                                 <input type="password" name="password" id="password" class="form__input"
                                     [(ngModel)]="loginForm.password" placeholder="Password">
                             </div>
+                            <div class="row">
+                                <label style="color: red;" *ngIf="errorMessage!=''">{{errorMessage}}</label>
+                            </div>
 
                             <div class="row ">
                                 <div class="col-12">
