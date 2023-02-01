@@ -163,7 +163,8 @@
                                             <p-dropdown [options]="statuses" (onChange)="filter($event.value)"
                                                 placeholder="Any" [showClear]="true">
                                                 <ng-template let-option pTemplate="item">
-                                                    <span [class]="'customer-badge status-' + option">{{option}}</span>
+                                                    <span
+                                                        [class]="'customer-badge activeFlag-' + option">{{option}}</span>
                                                 </ng-template>
                                             </p-dropdown>
                                         </ng-template>
@@ -290,7 +291,7 @@
                 <form #scriptForm="ngForm" (ngSubmit)="getFormData(scriptForm.value)">
                     <div class=" row mt-2">
                         <div class="col-4">
-                            <label class="form-label">Script Name</label>
+                            <label class="form-label">Script Name<span style="color: red;"> *</span></label>
 
                         </div>
 
@@ -336,54 +337,54 @@
 
                     <div class="row mt-2">
                         <div class="col-4">
-                            <label class="form-label">Investment Amount</label>
+                            <label class="form-label">Investment Amount<span style="color: red;"> *</span></label>
                         </div>
                         <div class="col-6">
                             <input id="investmentAmount" #investmentAmount="ngModel" [disabled]="isOnView"
                                 [(ngModel)]="scriptData.investmentBalance" class="form-control" type="text"
-                                name="investmentAmount" required pattern="[0-9]*"
-                                [ngClass]="{'is-invalid': (scriptForm.submitted && investmentAmount.invalid && !flag) || (investmentAmount.invalid && investmentAmount.touched && !flag) }"
+                                name="investmentAmount" pattern="[0-9]*" required
+                                [ngClass]="{'is-invalid': ((scriptForm.submitted && investmentAmount.invalid && !flag) || (investmentAmount.invalid && investmentAmount.touched && !flag)) && !rejectFlag}"
                                 style="display:inline-block;width: 50%">
                         </div>
                     </div>
                     <div class="row mt-2">
                         <div class="col-4">
-                            <label class="form-label">Buy Limit(Margin)</label>
+                            <label class="form-label">Buy Limit(Margin)<span style="color: red;"> *</span></label>
                         </div>
                         <div class="col-6">
                             <input id="buyMargin" class="form-control" #buyMargin="ngModel" [disabled]="isOnView"
                                 [(ngModel)]="scriptData.buyMargin" name="buyMargin" type="text" required
-                                [ngClass]="{'is-invalid': (scriptForm.submitted && buyMargin.invalid && !flag ) || (buyMargin.invalid && buyMargin.touched && !flag) }"
+                                [ngClass]="{'is-invalid': ((scriptForm.submitted && buyMargin.invalid && !flag ) || (buyMargin.invalid && buyMargin.touched && !flag)) && !rejectFlag}"
                                 style="display:inline-block;width: 50%" />%
                         </div>
                     </div>
                     <div class="row mt-2">
                         <div class="col-4">
-                            <label class="form-label">Sell Limit(Margin)</label>
+                            <label class="form-label">Sell Limit(Margin)<span style="color: red;"> *</span></label>
                         </div>
                         <div class="col-6">
                             <input id="sellMargin" class="form-control" #sellMargin="ngModel" name="sellMargin"
                                 [disabled]="isOnView" [(ngModel)]="scriptData.sellMargin" type="text" required
-                                [ngClass]="{'is-invalid': (scriptForm.submitted && sellMargin.invalid && !flag ) || (sellMargin.invalid && sellMargin.touched && !flag) }"
+                                [ngClass]="{'is-invalid': ((scriptForm.submitted && sellMargin.invalid && !flag ) || (sellMargin.invalid && sellMargin.touched && !flag)) && !rejectFlag}"
                                 style="display:inline-block;width: 50%" />%
                         </div>
                     </div>
                     <div class="row mt-2">
                         <div class="col-4">
-                            <label class="form-label">Reset Criteria</label>
+                            <label class="form-label">Reset Criteria<span style="color: red;"> *</span></label>
                         </div>
                         <div class="col-8">
 
                             <div class="form-check">
                                 <input class="form-check-input" type="radio" name="resetCriteria" id="resetCriteria1"
-                                    #resetCriteria="ngModel" [(ngModel)]="scriptData.resetCriteria" value="1" checked>
+                                    value="1" checked>
                                 <label class="form-check-label" for="resetCriteria1">
                                     Spot Price
                                 </label>
                             </div>
                             <div class="form-check">
                                 <input class="form-check-input" type="radio" name="resetCriteria" id="resetCriteria2"
-                                    #resetCriteria="ngModel" [(ngModel)]="scriptData.resetCriteria" value="2">
+                                    value="2">
                                 <label class="form-check-label" for="resetCriteria2">
                                     Marginal Buy
                                 </label>
@@ -398,7 +399,7 @@
 
                             <div class="form-check">
                                 <input class="form-check-input" type="radio" name="resetCriteria" id="resetCriteria3"
-                                    #resetCriteria="ngModel" [(ngModel)]="scriptData.resetCriteria" value="3">
+                                    value="3">
                                 <label class="form-check-label" for="resetCriteria3">
                                     Specific Value
                                 </label>
@@ -416,7 +417,7 @@
 
                     <div class="row mt-2">
                         <div class="col-4">
-                            <label class="form-label">StopLoss</label>
+                            <label class="form-label">StopLoss<span style="color: red;"> *</span></label>
                         </div>
                         <div class="col-8">
 
@@ -455,7 +456,7 @@
                     </div>
                     <div class="row mt-2">
                         <div class="col-4">
-                            <label class="form-label">Exchange</label>
+                            <label class="form-label">Exchange<span style="color: red;"> *</span></label>
                         </div>
                         <div class="col-8">
                             <div class="form-check">
@@ -485,7 +486,8 @@
                                        (click)="addScript(scriptForm.value)">Save</button>
                                         </div> -->
                                 <div class="col-2">
-                                    <button class="btn btn-secondary" *ngIf=" !isOnView && !isOnEdit"
+                                    <button class="btn btn-secondary" [disabled]="scriptForm.invalid"
+                                        *ngIf=" !isOnView && !isOnEdit"
                                         style="background-color:#FB525A ;color: #fff;">Save</button>
                                 </div>
                                 <div class="col-2">
@@ -564,7 +566,7 @@
                             </div>
                         </div>
                         <div class="row">
-                            <div class="col-md-4 mb-1">
+                            <div class="col-md-4">
                                 <label for="Reset Criteria" class="p-2">Reset Criteria<span style="color: red;">
                                         *</span></label>
                                 <div class="form-floating text-muted fs-6">
@@ -604,7 +606,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-md-3 mb-1">
+                            <div class="col-md-5 ">
                                 <label for="stoploss" class="p-2">StopLoss<span style="color: red;">
                                         *</span></label>
 
@@ -634,48 +636,9 @@
 
                                 </div>
                             </div>
-                            <div class="col-md-2 ">
 
-                                <label *ngIf="resetCriteria.value=='2' || resetCriteriaInput==2 "
-                                    [hidden]="resetCriteriaInput==3 || resetCriteriaInput==1" for="Marginal Buy"
-                                    class="p-2">Marginal
-                                    Buy</label>
-                                <input type="text" name="marginalValue" #marginalValue="ngModel" [disabled]="isOnView"
-                                    [(ngModel)]="scriptData.marginalValue"
-                                    *ngIf="resetCriteria.value=='2' || resetCriteriaInput==2"
-                                    [hidden]="resetCriteriaInput==3 || resetCriteriaInput==1" class="form-control  "
-                                    placeholder="Enter Marginal Value">
-
-                                <label *ngIf="resetCriteria.value=='3' || resetCriteriaInput==3"
-                                    [hidden]="resetCriteriaInput==2 || resetCriteriaInput==1" for="Specific Buy"
-                                    class="p-2">Specific
-                                    Buy</label>
-                                <input type="text" name="specificValue" #specificValue="ngModel" [disabled]="isOnView"
-                                    [(ngModel)]="scriptData.specificValue"
-                                    [hidden]="resetCriteriaInput==2 || resetCriteriaInput==1"
-                                    *ngIf="resetCriteria.value=='3'|| resetCriteriaInput==3" class="form-control "
-                                    placeholder="Enter Specific Value">
-                                <!--STOP LOSS RADIO BUTTONS-->
-
-                                <label *ngIf="stop_loss.value=='1' || stop_loss_input==1 " [hidden]="stop_loss_input==2"
-                                    for="Percentage " class="p-2">Percentage </label>
-                                <input type="text" name="stop_loss_percentage" #stop_loss_percentage="ngModel"
-                                    [disabled]="isOnView" [(ngModel)]="scriptData.stop_loss_percentage"
-                                    *ngIf="stop_loss.value=='1' || stop_loss_input==1" [hidden]="stop_loss_input==2 "
-                                    class="form-control  " placeholder="Enter Percentage">
-
-                                <label *ngIf="stop_loss.value=='2' || stop_loss_input==2" [hidden]="stop_loss_input==1"
-                                    for="Stop loss value" class="p-2">Stoploss
-                                    Value</label>
-                                <input type="text" name="stop_loss_value" #stop_loss_value="ngModel"
-                                    [disabled]="isOnView" [(ngModel)]="scriptData.stop_loss_value"
-                                    [hidden]=" stop_loss_input==1"
-                                    *ngIf="scriptData.stop_loss=='2' || stop_loss_input==2" class="form-control "
-                                    placeholder="Enter Stoploss Value">
-
-                            </div>
-
-                            <div class="col-md-1 mb-1">
+                            <!-- 
+                            <div class="col-md-1 ">
                                 <label for="Exchange" class="p-2">Exchange</label>
                                 <div class="form-floating text-muted fs-6">
                                     <div class="form-check form-check-inline">
@@ -689,8 +652,8 @@
                                         <label class="form-check-label">NSE</label>
                                     </div><br /><br />
                                 </div>
-                            </div>
-                            <div class="col-1 mt-5" align="right">
+                            </div> -->
+                            <div class="col-2 mt-5" align="right">
                                 <button type="button" pButton pRipple class="btn btn-outline-secondary"
                                     (click)="updateScript(scriptForm.value)" *ngIf="isOnEdit"
                                     style="background-color:#FB525A ;color: #fff; width: 90px; "><strong>Update</strong></button>
@@ -703,9 +666,49 @@
                         </div>
                         <div class="row">
 
+                            <div class="col-md-2">
+                                <label *ngIf="resetCriteriaInput==2 "
+                                    [hidden]="resetCriteriaInput==3 || resetCriteriaInput==1" for="Marginal Buy"
+                                    class="p-2">Marginal
+                                    Buy</label>
+                                <input type="text" name="marginalValue" #marginalValue="ngModel" [disabled]="isOnView"
+                                    [(ngModel)]="scriptData.marginalValue" *ngIf="resetCriteriaInput==2"
+                                    [hidden]="resetCriteriaInput==3 || resetCriteriaInput==1" class="form-control  "
+                                    placeholder="Enter Marginal Value">
 
+                                <label *ngIf="resetCriteriaInput==3"
+                                    [hidden]="resetCriteriaInput==2 || resetCriteriaInput==1" for="Specific Buy"
+                                    class="p-2">Specific
+                                    Buy</label>
+                                <input type="text" name="specificValue" #specificValue="ngModel" [disabled]="isOnView"
+                                    [(ngModel)]="scriptData.specificValue"
+                                    [hidden]="resetCriteriaInput==2 || resetCriteriaInput==1"
+                                    *ngIf="resetCriteriaInput==3" class="form-control "
+                                    placeholder="Enter Specific Value">
+                            </div>
+                            <div class="col-md-2"></div>
+                            <!--STOP LOSS RADIO BUTTONS-->
+                            <div class="col-md-2">
+                                <label *ngIf="stop_loss.value=='1' || stop_loss_input==1 " [hidden]="stop_loss_input==2"
+                                    for="Percentage " class="p-2">Percentage
+                                </label>
+                                <input type="text" name="stop_loss_percentage" #stop_loss_percentage="ngModel"
+                                    [disabled]="isOnView" [(ngModel)]="scriptData.stop_loss_percentage"
+                                    *ngIf="stop_loss.value=='1' || stop_loss_input==1" [hidden]="stop_loss_input==2 "
+                                    class="form-control  " placeholder="Enter Percentage">
 
+                                <label *ngIf="stop_loss.value=='2' || stop_loss_input==2" [hidden]="stop_loss_input==1"
+                                    for="Stop loss value" class="p-2">Stoploss
+                                    Value</label>
+                                <input type="text" name="stop_loss_value" #stop_loss_value="ngModel"
+                                    [disabled]="isOnView" [(ngModel)]="scriptData.stop_loss_value"
+                                    [hidden]=" stop_loss_input==1"
+                                    *ngIf="scriptData.stop_loss=='2' || stop_loss_input==2" class="form-control "
+                                    placeholder="Enter Stoploss Value">
+                            </div>
                         </div>
+
+
 
                     </div>
                     <!--END CODE FOR SCRIPT DETAILS-->
@@ -827,7 +830,8 @@
                                 <tr>
                                     <td class="text-center">{{transactiondetails.scriptId}}</td>
                                     <td class="text-center">{{transactiondetails.orderDate | date:'dd/MM/yyyy'}}</td>
-                                    <td class="text-center">{{transactiondetails.orderDate | date:'shortTime' }}</td>
+                                    <td class="text-center">{{ transactiondetails.orderDate | date:'shortTime'}}
+                                    </td>
                                     <td><span
                                             [class]="'customer-badge status-' + transactiondetails.orderType">{{transactiondetails.orderType}}</span>
                                     </td>

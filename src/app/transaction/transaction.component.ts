@@ -24,12 +24,13 @@ export class TransactionComponent {
     this.fromDate = ""
     this.toDate = ""
     this.filter = []
+    this.clearFilter();
     // this.trans_filter();
     this.getAllTransactions();
     this.orderstatus = ['Buy', 'Sell'];
   }
   getAllTransactions() {
-    this.getData("http://127.0.0.1:8001/GetTransactionForCurrentDate").subscribe(data => {
+    this.getData("http://127.0.0.1:5000/GetTransactionForCurrentDate").subscribe(data => {
       console.log(data)
       this.getTodaysProfit();
       this.todaysTransactionList = data
@@ -106,8 +107,19 @@ export class TransactionComponent {
     this.todaysTransactionList = this.todaysTransactionList.filter((e: any) => e.orderDate.toDateString() === d.toDateString())
   }
 
+  clearFilter() {
+    this.filter = {
+      scriptName: '',
+      fromDate: '',
+      toDate: '',
+    };
+    this.toDate = ""
+    this.fromDate = ""
+    this.todaysTransactionList = this.allTransactionList
+
+  }
   getTodaysProfit() {
-    this.getData("http://127.0.0.1:8001/getTodaysProfit").subscribe(data => {
+    this.getData("http://127.0.0.1:5000/getTodaysProfit").subscribe(data => {
       console.log(data)
       this.todaysProfit = data
     })
@@ -115,7 +127,7 @@ export class TransactionComponent {
 
   getProfitByDateRange(fromDate: any, toDate: any) {
     const params = new HttpParams().set("fromDate", fromDate).set("toDate", toDate)
-    this.getDataWithParams("http://127.0.0.1:8001/GetProfitByDateRange", params).subscribe(data => {
+    this.getDataWithParams("http://127.0.0.1:5000/GetProfitByDateRange", params).subscribe(data => {
       console.log(data)
       this.todaysProfit = data
     })

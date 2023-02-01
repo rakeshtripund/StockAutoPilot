@@ -99,6 +99,18 @@ form .form-label {
     letter-spacing: .3px;
 }
 
+.activeFlag-Closed {
+    background-color: #eeaebf;
+    color: #c4148f;
+    border-radius: 2px;
+    padding: 0.25em 0.5rem;
+    text-transform: uppercase;
+    font-weight: 700;
+    font-size: 12px;
+    letter-spacing: .3px;
+}
+
+
 
 
 :host ::ng-deep .p-datatable .p-datatable-tbody>tr>td {
