@@ -30,7 +30,7 @@ export class TransactionComponent {
     this.orderstatus = ['Buy', 'Sell'];
   }
   getAllTransactions() {
-    this.getData("http://127.0.0.1:5000/GetTransactionForCurrentDate").subscribe(data => {
+    this.getData("http://127.0.0.1:8001/GetTransactionForCurrentDate").subscribe(data => {
       console.log(data)
       this.getTodaysProfit();
       this.todaysTransactionList = data
@@ -119,7 +119,7 @@ export class TransactionComponent {
 
   }
   getTodaysProfit() {
-    this.getData("http://127.0.0.1:5000/getTodaysProfit").subscribe(data => {
+    this.getData("http://127.0.0.1:8001/getTodaysProfit").subscribe(data => {
       console.log(data)
       this.todaysProfit = data
     })

@@ -384,29 +384,27 @@
                             </div>
                             <div class="form-check">
                                 <input class="form-check-input" type="radio" name="resetCriteria" id="resetCriteria2"
-                                    value="2">
+                                    #addFormMarginal value="2">
                                 <label class="form-check-label" for="resetCriteria2">
                                     Marginal Buy
                                 </label>
 
                                 <br>
-                                <input id="marginalValue" class="form-control" #marginalValue="ngModel"
-                                    [(ngModel)]="scriptData.marginalValue" name="marginalValue" type="text"
-                                    *ngIf="scriptData.resetCriteria == 2 " placeholder="Enter Marginal Value"
+                                <input id="marginalValue" class="form-control" name="marginalValue" type="text"
+                                    *ngIf="addFormMarginal.checked" placeholder="Enter Marginal Value"
                                     style="width: 40%; margin-top: 5px;">
 
                             </div>
 
                             <div class="form-check">
                                 <input class="form-check-input" type="radio" name="resetCriteria" id="resetCriteria3"
-                                    value="3">
+                                    value="3" #addFormSpecific>
                                 <label class="form-check-label" for="resetCriteria3">
                                     Specific Value
                                 </label>
                                 <br>
-                                <input id="specificValue" class="form-control" #specificValue="ngModel"
-                                    [(ngModel)]="scriptData.specificValue" name="specificValue" type="text"
-                                    *ngIf="scriptData.resetCriteria == 3 " placeholder="Enter Specific Value"
+                                <input id="specificValue" class="form-control" name="specificValue" type="text"
+                                    *ngIf="addFormSpecific.checked" placeholder="Enter Specific Value"
                                     style="width: 40%; margin-top: 5px;">
 
 
@@ -414,8 +412,21 @@
 
                         </div>
                     </div>
-
                     <div class="row mt-2">
+                        <div class="col-4">
+                            <label class="form-label"> Market Rate Stoploss <span style="color: red;"> *</span></label>
+                        </div>
+                        <div class="col-8">
+                            <input id="market_rate_stoploss" #market_rate_stoploss="ngModel" [disabled]="isOnView"
+                                [(ngModel)]="scriptData.market_rate_stoploss" class="form-control" type="text"
+                                name="market_rate_stoploss" required
+                                [ngClass]="{'is-invalid': ((scriptForm.submitted && market_rate_stoploss.invalid && !flag) || (market_rate_stoploss.invalid && market_rate_stoploss.touched && !flag)) && !rejectFlag}"
+                                style="display:inline-block;width: 40%">
+
+                        </div>
+                    </div>
+
+                    <!-- <div class="row mt-2">
                         <div class="col-4">
                             <label class="form-label">StopLoss<span style="color: red;"> *</span></label>
                         </div>
@@ -453,7 +464,7 @@
                             </div>
 
                         </div>
-                    </div>
+                    </div> -->
                     <div class="row mt-2">
                         <div class="col-4">
                             <label class="form-label">Exchange<span style="color: red;"> *</span></label>
@@ -476,6 +487,8 @@
 
 
 
+
+
                     <div class="row mt-2">
                         <div class="col-4"></div>
                         <div class="col-6">
@@ -485,20 +498,24 @@
                                       class="btn btn-secondary" [disabled]="scriptForm.invalid"
                                        (click)="addScript(scriptForm.value)">Save</button>
                                         </div> -->
-                                <div class="col-2">
+
+
+                                <div class="col-3">
                                     <button class="btn btn-secondary" [disabled]="scriptForm.invalid"
                                         *ngIf=" !isOnView && !isOnEdit"
-                                        style="background-color:#FB525A ;color: #fff;">Save</button>
+                                        style="background-color:#FB525A ;color: #fff; width: 80px;">Save</button>
                                 </div>
-                                <div class="col-2">
-                                    <input type="reset" class="btn btn-secondary" value="Reset" *ngIf=" !isOnView"
-                                        class="btn btn-secondary"
-                                        style="background-color:#FB525A ;color: #fff; border-radius: 6px; ">
-                                </div>
+
                                 <div class="col-2">
                                     <a style="background-color:#FB525A ;color: #fff; " class="btn btn-secondary"
                                         (click)="closeNav()">Cancel</a>
                                 </div>
+                                <!-- <div class="col-2">
+                                    <input type="reset" class="btn btn-secondary" value="Reset" *ngIf=" !isOnView"
+                                        class="btn btn-secondary"
+                                        style="background-color:#FB525A ;color: #fff; border-radius: 6px; ">
+                                </div> -->
+
                             </div>
                         </div>
                     </div>
@@ -522,7 +539,7 @@
                     <!-- CODE FOR SCRIPT DETAILS-->
                     <div class="row">
                         <div class="row">
-                            <div class="col-lg-3 mb-1">
+                            <div class="col-lg-2 mb-1">
                                 <div class="form-floating text-muted fs-6">
                                     <input type="text" class="form-control" placeholder="Script Name" name="scriptName"
                                         style="border-radius: 12px; height: 50px;" [(ngModel)]="scriptData.scriptName"
@@ -531,7 +548,7 @@
                                             *</span></label>
                                 </div>
                             </div>
-                            <div class="col-lg-3 mb-1">
+                            <div class="col-lg-2 mb-1">
                                 <div class="form-floating text-muted fs-6">
                                     <input type="text" class="form-control" placeholder="Investment Amount"
                                         [(ngModel)]="scriptData.investmentBalance" name="investmentBalance"
@@ -553,6 +570,16 @@
                                         #sellMargin="ngModel" name="sellMargin" type="text" [disabled]="isOnView"
                                         [(ngModel)]="scriptData.sellMargin" style="border-radius: 12px; height: 50px;">
                                     <label for="Sell Limit" class="p-2">Sell Limit % </label>
+                                </div>
+                            </div>
+
+                            <div class="col-lg-2 mb-1">
+                                <div class="form-floating text-muted fs-6">
+                                    <input type="text" class="form-control" placeholder="Market Rate StopLoss"
+                                        #market_rate_stoploss="ngModel" name="market_rate_stoploss" type="text"
+                                        [(ngModel)]="scriptData.market_rate_stoploss"
+                                        style="border-radius: 12px; height: 50px;">
+                                    <label for="Market Rate StopLoss" class="p-2">Market Rate StopLoss </label>
                                 </div>
                             </div>
                             <div class="col-lg-2 mb-1">
@@ -606,7 +633,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-md-5 ">
+                            <!-- <div class="col-md-5 ">
                                 <label for="stoploss" class="p-2">StopLoss<span style="color: red;">
                                         *</span></label>
 
@@ -635,10 +662,10 @@
                                     </div>
 
                                 </div>
-                            </div>
+                            </div> -->
 
-                            <!-- 
-                            <div class="col-md-1 ">
+
+                            <div class="col-md-3 ">
                                 <label for="Exchange" class="p-2">Exchange</label>
                                 <div class="form-floating text-muted fs-6">
                                     <div class="form-check form-check-inline">
@@ -652,7 +679,8 @@
                                         <label class="form-check-label">NSE</label>
                                     </div><br /><br />
                                 </div>
-                            </div> -->
+                            </div>
+                            <div class="col-2"></div>
                             <div class="col-2 mt-5" align="right">
                                 <button type="button" pButton pRipple class="btn btn-outline-secondary"
                                     (click)="updateScript(scriptForm.value)" *ngIf="isOnEdit"
@@ -688,7 +716,7 @@
                             </div>
                             <div class="col-md-2"></div>
                             <!--STOP LOSS RADIO BUTTONS-->
-                            <div class="col-md-2">
+                            <!-- <div class="col-md-2">
                                 <label *ngIf="stop_loss.value=='1' || stop_loss_input==1 " [hidden]="stop_loss_input==2"
                                     for="Percentage " class="p-2">Percentage
                                 </label>
@@ -705,7 +733,7 @@
                                     [hidden]=" stop_loss_input==1"
                                     *ngIf="scriptData.stop_loss=='2' || stop_loss_input==2" class="form-control "
                                     placeholder="Enter Stoploss Value">
-                            </div>
+                            </div> -->
                         </div>
 
 
