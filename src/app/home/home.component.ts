@@ -46,6 +46,7 @@ export class HomeComponent {
   stopLossInput: any
   messageService: any;
   rejectFlag: boolean = true
+  addFormResetInput: any
 
 
   constructor(private http: HttpClient, private confirmationService: ConfirmationService, public router: Router) { }
@@ -80,7 +81,7 @@ export class HomeComponent {
     this.statuses = ['Paused', 'Saved', 'Live', 'Closed'];
     this.orderstatus = ['Buy', 'Sell'];
     this.rejectFlag = false
-
+    this.addFormResetInput = 0
   }
 
   //open add script function
@@ -108,6 +109,7 @@ export class HomeComponent {
     if (!formdata.marginalValue) {
       formdata.marginalValue = 0; // above code is to check if formdata.specificValue is present or not if not present then value must be 0
     }
+    formdata.resetCriteria = this.addFormResetInput
     // if (!formdata.stop_loss_percentage) {
     //   formdata.stop_loss_percentage = 0
     // }
@@ -459,7 +461,7 @@ export class HomeComponent {
   }
   // code for update script status for pause functionality
   updateScriptStatus(id: any, status: any) {
-
+    debugger
     const params = new HttpParams().set("id", id)
       .set("status", status)
     this.getDataWithParams("http://127.0.0.1:8001/UpdateScriptStatusById", params).subscribe(data => {
@@ -512,8 +514,8 @@ export class HomeComponent {
     this.resetCriteriaInput = value
 
   }
-  switchAddFormReset() {
-
+  switchAddFormReset(indicator: any) {
+    this.addFormResetInput = indicator
   }
 
   // switchStoplossInputFields(value: any) {

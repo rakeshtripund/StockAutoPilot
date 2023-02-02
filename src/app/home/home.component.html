@@ -377,34 +377,36 @@
 
                             <div class="form-check">
                                 <input class="form-check-input" type="radio" name="resetCriteria" id="resetCriteria1"
-                                    value="1" checked>
+                                    value="1" (click)="switchAddFormReset(0)" checked>
                                 <label class="form-check-label" for="resetCriteria1">
                                     Spot Price
                                 </label>
                             </div>
                             <div class="form-check">
                                 <input class="form-check-input" type="radio" name="resetCriteria" id="resetCriteria2"
-                                    #addFormMarginal value="2">
+                                    #addFormMarginal value="2" (click)="switchAddFormReset(1)">
                                 <label class="form-check-label" for="resetCriteria2">
                                     Marginal Buy
                                 </label>
 
                                 <br>
                                 <input id="marginalValue" class="form-control" name="marginalValue" type="text"
-                                    *ngIf="addFormMarginal.checked" placeholder="Enter Marginal Value"
+                                    #specificValue="ngModel" [(ngModel)]="scriptData.MarginalValue"
+                                    [hidden]="addFormResetInput!=1" placeholder="Enter Marginal Value"
                                     style="width: 40%; margin-top: 5px;">
 
                             </div>
 
                             <div class="form-check">
                                 <input class="form-check-input" type="radio" name="resetCriteria" id="resetCriteria3"
-                                    value="3" #addFormSpecific>
+                                    value="3" #addFormSpecific (click)="switchAddFormReset(2)">
                                 <label class="form-check-label" for="resetCriteria3">
                                     Specific Value
                                 </label>
                                 <br>
                                 <input id="specificValue" class="form-control" name="specificValue" type="text"
-                                    *ngIf="addFormSpecific.checked" placeholder="Enter Specific Value"
+                                    #specificValue="ngModel" [(ngModel)]="scriptData.specificValue"
+                                    [hidden]="addFormResetInput!=2" placeholder="Enter Specific Value"
                                     style="width: 40%; margin-top: 5px;">
 
 
