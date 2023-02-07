@@ -240,8 +240,9 @@
                                         class="p-button-rounded p-button-warning"></button>
                                 </td>
                                 <td style="width:4px ;">
-                                    <button pButton pRipple type="button" (click)="delete(scripts.id)" title="Delete"
-                                        icon="pi pi-trash" class="p-button-rounded p-button-danger "></button>
+                                    <button pButton pRipple type="button" (click)="delete(scripts.id)"
+                                        [disabled]="scripts.isdeleted==1" title="Delete" icon="pi pi-trash"
+                                        class="p-button-rounded p-button-danger "></button>
                                 </td>
                                 <!-- <td style="width:4px ;"><button pButton pRipple type="button" title="Play"
                                         icon="pi pi-play" class="p-button-rounded p-button-help "
@@ -255,12 +256,13 @@
                                 <td style="width:4px ;">
                                     <button pButton pRipple type="button" title="Play" icon="pi pi-play"
                                         class="p-button-rounded p-button-help "
-                                        (click)="startProgram(scripts.id, scripts.scriptName)" title="Play"
+                                        (click)="updateScriptStatus(scripts.scriptName, scripts.id, 1)" title="Play"
                                         *ngIf="scripts.activeFlag!=='Live'" [disabled]="scripts.isdeleted==1"></button>
                                     <button pButton pRipple type="button" title="Pause" icon="pi pi-pause"
                                         class="p-button-rounded p-button-success "
                                         *ngIf="(scripts.activeFlag=='Live')&&(scripts.isdeleted!=1)"
-                                        (click)="updateScriptStatus(scripts.id, 0)" title="Pause"></button>
+                                        (click)="updateScriptStatus(scripts.scriptName, scripts.id, 0)"
+                                        title="Pause"></button>
                                 </td>
                             </tr>
                         </ng-template>
@@ -579,7 +581,7 @@
                                 <div class="form-floating text-muted fs-6">
                                     <input type="text" class="form-control" placeholder="Market Rate StopLoss"
                                         #market_rate_stoploss="ngModel" name="market_rate_stoploss" type="text"
-                                        [(ngModel)]="scriptData.market_rate_stoploss"
+                                        [(ngModel)]="scriptData.market_rate_stoploss" [disabled]="isOnView"
                                         style="border-radius: 12px; height: 50px;">
                                     <label for="Market Rate StopLoss" class="p-2">Market Rate StopLoss </label>
                                 </div>
@@ -607,7 +609,7 @@
                                         <input class="form-check-input" type="radio" name="resetCriteria"
                                             #resetCriteria1 id="resetCriteria1" value="1" [disabled]="isOnView"
                                             (click)="switchResetInputFields(resetCriteria1.value)"
-                                            [checked]="scriptData.resetCriteria=='1'">
+                                            [checked]="resetCriteriaInput==0">
                                         <label class="form-check-label">
                                             Spot Price
                                         </label>
@@ -616,7 +618,7 @@
                                         <input id="resetCriteria2" class="form-check-input" value="2" #resetCriteria2
                                             [disabled]="isOnView" name="resetCriteria" type="radio" name="resetCriteria"
                                             (click)="switchResetInputFields(resetCriteria2.value)"
-                                            [checked]="scriptData.resetCriteria=='2'">
+                                            [checked]="resetCriteriaInput==1">
                                         <label class="form-check-label">
                                             Marginal Buy
                                         </label>
@@ -626,7 +628,7 @@
                                         <input id="resetCriteria3" class="form-check-input" value="3" #resetCriteria3
                                             [disabled]="isOnView" name="resetCriteria" type="radio"
                                             (click)="switchResetInputFields(resetCriteria3.value)"
-                                            [checked]="scriptData.resetCriteria=='3'">
+                                            [checked]="resetCriteriaInput==2">
                                         <label class="form-check-label">
                                             Specific Value
                                         </label>

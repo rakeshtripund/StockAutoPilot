@@ -110,6 +110,16 @@ form .form-label {
     letter-spacing: .3px;
 }
 
+.activeFlag-Deleted {
+    background-color: #f29186fc;
+    color: #f50606;
+    border-radius: 2px;
+    padding: 0.25em 0.5rem;
+    text-transform: uppercase;
+    font-weight: 700;
+    font-size: 12px;
+    letter-spacing: .3px;
+}
 
 
 

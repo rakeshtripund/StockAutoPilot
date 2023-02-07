@@ -1,11 +1,14 @@
 import { Component } from '@angular/core';
 import { HttpClient, HttpParams, HttpXsrfTokenExtractor, } from '@angular/common/http';
 import { Router } from '@angular/router';
+import { MessageService } from 'primeng/api';
+
 
 @Component({
   selector: 'app-transaction',
   templateUrl: './transaction.component.html',
-  styleUrls: ['./transaction.component.css']
+  styleUrls: ['./transaction.component.css'],
+  providers: [MessageService]
 })
 export class TransactionComponent {
   todaysTransactionList: any;
@@ -18,7 +21,8 @@ export class TransactionComponent {
   toDate: any
   todaysProfit: any
   scriptName: any
-  constructor(private http: HttpClient, private router: Router) { }
+  messageService: any;
+  constructor(private http: HttpClient, private router: Router, messageService: MessageService) { }
   ngOnInit(): void {
     this.todaysList = {}
     this.fromDate = ""
@@ -30,7 +34,7 @@ export class TransactionComponent {
     this.orderstatus = ['Buy', 'Sell'];
   }
   getAllTransactions() {
-    this.getData("http://127.0.0.1:8001/GetTransactionForCurrentDate").subscribe(data => {
+    this.getData("http://127.0.0.1:5000/GetTransactionForCurrentDate").subscribe(data => {
       console.log(data)
       this.getTodaysProfit();
       this.todaysTransactionList = data
@@ -119,9 +123,15 @@ export class TransactionComponent {
 
   }
   getTodaysProfit() {
-    this.getData("http://127.0.0.1:8001/getTodaysProfit").subscribe(data => {
+    this.getData("http://127.0.0.1:5000/getTodaysProfit").subscribe(data => {
       console.log(data)
       this.todaysProfit = data
+      console.log()
+    }, error => {
+      if (error.status == 500) {
+        console.log(error.error.message)
+
+      }
     })
   }
 
@@ -133,6 +143,8 @@ export class TransactionComponent {
     })
 
   }
+
+
   getData(url: string,) {
     return this.http.get(url);
   }
