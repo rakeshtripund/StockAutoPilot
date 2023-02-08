@@ -36,7 +36,7 @@ export class LoginComponent {
     // console.log(formdata)
     formdata.password = this.encryptUsingAES256(formdata.password)
     console.log(formdata)
-    this.postData("http://127.0.0.1:5000/authenticate", formdata).subscribe(response => {
+    this.postData("http://127.0.0.1:5123/authenticate", formdata).subscribe(response => {
       this.token = response
       localStorage.setItem("token", this.token.token)
       this.router.navigate(["/StockAutoPilot"])

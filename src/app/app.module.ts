@@ -9,12 +9,13 @@ import { TableModule } from 'primeng/table';
 import { DropdownModule } from 'primeng/dropdown';
 import { HttpClientModule, HTTP_INTERCEPTORS } from "@angular/common/http";
 import { ButtonModule } from 'primeng/button';
-import { ToastModule } from 'primeng/toast';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { ConfirmationService, } from 'primeng/api';
 import { TransactionComponent } from './transaction/transaction.component';
 import { LoginComponent } from './login/login.component';
 import { TokenInterceptorService } from './Services/token-interceptor.service';
+import { ToastModule } from 'primeng/toast';
+import { MessageService } from 'primeng/api';
 
 
 
@@ -41,7 +42,7 @@ import { TokenInterceptorService } from './Services/token-interceptor.service';
     HttpClientModule
 
   ],
-  providers: [ConfirmationService, { provide: HTTP_INTERCEPTORS, useClass: TokenInterceptorService, multi: true }],
+  providers: [MessageService, ConfirmationService, { provide: HTTP_INTERCEPTORS, useClass: TokenInterceptorService, multi: true }],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
