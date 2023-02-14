@@ -1,4 +1,4 @@
-import { HttpEvent, HttpHandler, HttpInterceptor, HttpRequest } from '@angular/common/http';
+import { HttpEvent, HttpHandler, HttpHeaders, HttpInterceptor, HttpRequest } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 
@@ -17,6 +17,26 @@ export class TokenInterceptorService implements HttpInterceptor {
       }
     })
 
-    return next.handle(jwttoken)
+    // const headers = new HttpHeaders({
+    //   'Content-Type': 'application/json',
+    //   'Access-Control-Allow-Origin': '*',
+    //   'Access-Control-Allow-Headers': 'Content-Type',
+    //   'Authorization': 'bearer ' + token
+    // });
+
+    const httpOptions = {
+      headers: new HttpHeaders({
+        'Content-Type': 'application/json',
+        'Access-Control-Allow-Origin': '*',
+        'Access-Control-Allow-Headers': 'Content-Type',
+        'Authorization': 'bearer ' + token
+      })
+    };
+
+    req = req.clone({ headers: httpOptions.headers });
+
+    //const cloneReq = req.clone({ headers });
+
+    return next.handle(req)
   }
 }
