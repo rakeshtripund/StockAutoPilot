@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { HttpClient, HttpParams, HttpXsrfTokenExtractor, } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { MessageService } from 'primeng/api';
+import { environment } from '../environments/environment';
 
 
 @Component({
@@ -34,7 +35,7 @@ export class TransactionComponent {
     this.orderstatus = ['Buy', 'Sell'];
   }
   getAllTransactions() {
-    this.getData("http://127.0.0.1:5123/GetTransactionForCurrentDate").subscribe(data => {
+    this.getData(environment.baseUrl + "GetTransactionForCurrentDate").subscribe(data => {
       console.log(data)
       this.getTodaysProfit();
       this.todaysTransactionList = data
@@ -54,6 +55,11 @@ export class TransactionComponent {
       if (error.status == 401) {
         console.log(error)
         this.router.navigate(["/StockAutoPilotLogin"])
+      }
+      else if (error.status == 500) {
+        console.log(error.error.Error)
+        this.messageService.add({ severity: 'error', summary: "Exception", detail: error.error.Error });
+
       }
     })
   }
@@ -123,21 +129,22 @@ export class TransactionComponent {
 
   }
   getTodaysProfit() {
-    this.getData("http://127.0.0.1:5123/getTodaysProfit").subscribe(data => {
+    this.getData(environment.baseUrl + "getTodaysProfit").subscribe(data => {
       console.log(data)
       this.todaysProfit = data
       console.log()
     }, error => {
       if (error.status == 500) {
         console.log(error.error.message)
-
+        this.messageService.add({ severity: 'error', summary: "Exception", detail: error.error.Error });
       }
+
     })
   }
 
   getProfitByDateRange(fromDate: any, toDate: any) {
     const params = new HttpParams().set("fromDate", fromDate).set("toDate", toDate)
-    this.getDataWithParams("http://127.0.0.1:5123/GetProfitByDateRange", params).subscribe(data => {
+    this.getDataWithParams(environment.baseUrl + "GetProfitByDateRange", params).subscribe(data => {
       console.log(data)
       this.todaysProfit = data
     })

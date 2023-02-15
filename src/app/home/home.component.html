@@ -242,8 +242,8 @@
                                 </td>
                                 <td style="width:4px ;">
                                     <button pButton pRipple type="button" (click)="delete(scripts.id)"
-                                        [disabled]="scripts.isdeleted==1" title="Delete" icon="pi pi-trash"
-                                        class="p-button-rounded p-button-danger "></button>
+                                        [disabled]="scripts.isdeleted==1 || scripts.activeFlag == 2" title="Delete"
+                                        icon="pi pi-trash" class="p-button-rounded p-button-danger "></button>
                                 </td>
                                 <!-- <td style="width:4px ;"><button pButton pRipple type="button" title="Play"
                                         icon="pi pi-play" class="p-button-rounded p-button-help "
@@ -536,8 +536,23 @@
         box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px; border: 1px solid #FB525A!important;">
             <div class="card border-0 px-3 mb-3" style="width:100%;margin: auto;">
                 <div class="row">
-                    <p *ngIf=" isOnEdit&&!isOnView" class="fs-4 m-1"><strong>Edit Script</strong></p>
-                    <p *ngIf=" isOnView&&!isOnEdit" class="fs-4 m-1"><strong>View Script</strong></p>
+                    <div class="col-10">
+                        <p *ngIf=" isOnEdit&&!isOnView" class="fs-4 m-1"><strong>Edit Script
+                                <span style="color: rgb(2, 114, 2);">(Current Price
+                                    {{scriptData.currentprice}})</span>
+                            </strong></p>
+                        <p *ngIf=" isOnView&&!isOnEdit" class="fs-4 m-1"><strong>View Script <span
+                                    style="color: rgb(2, 114, 2);">(Current Price
+                                    {{scriptData.currentprice}})</span></strong></p>
+                    </div>
+
+
+                    <div class="col-2 mt-1 " *ngIf="isOnView||isOnEdit">
+                        <button type="reset" (click)="viewMasterPage()"
+                            style=" background-color:#FB525A ;color: #fff; width: 90px; margin-left: 65px;"
+                            class="btn btn-outline-secondary "><strong>Back</strong></button>
+                    </div>
+
                 </div>
                 <br />
                 <div class="card border-0 px-6 " style="width:100%;margin: auto;">
@@ -557,7 +572,7 @@
                                 <div class="form-floating text-muted fs-6">
                                     <input type="text" class="form-control" placeholder="Investment Amount"
                                         [(ngModel)]="scriptData.investmentBalance" name="investmentBalance"
-                                        style="border-radius: 12px; height: 50px;" [disabled]="isOnView">
+                                        style="border-radius: 12px; height: 50px;" disabled>
                                     <label for="Investment Amount" class="p-2">Investment Balance (₹)</label>
                                 </div>
                             </div>
@@ -608,7 +623,7 @@
                                             [(ngModel)]="scripts.resetCriteria" class="form-check-input" type="radio"
                                             value="1" [checked]="true" name="resetCriteria"> -->
                                         <input class="form-check-input" type="radio" name="resetCriteria"
-                                            #resetCriteria1 id="resetCriteria1" value="1" [disabled]="isOnView"
+                                            #resetCriteria1 id="resetCriteria1" value="0" [disabled]="isOnView"
                                             (click)="switchResetInputFields(resetCriteria1.value)"
                                             [checked]="resetCriteriaInput==0">
                                         <label class="form-check-label">
@@ -616,7 +631,7 @@
                                         </label>
                                     </div>
                                     <div class="form-check form-check-inline">
-                                        <input id="resetCriteria2" class="form-check-input" value="2" #resetCriteria2
+                                        <input id="resetCriteria2" class="form-check-input" value="1" #resetCriteria2
                                             [disabled]="isOnView" name="resetCriteria" type="radio" name="resetCriteria"
                                             (click)="switchResetInputFields(resetCriteria2.value)"
                                             [checked]="resetCriteriaInput==1">
@@ -626,12 +641,12 @@
 
                                     </div>
                                     <div class="form-check form-check-inline">
-                                        <input id="resetCriteria3" class="form-check-input" value="3" #resetCriteria3
+                                        <input id="resetCriteria3" class="form-check-input" value="2" #resetCriteria3
                                             [disabled]="isOnView" name="resetCriteria" type="radio"
                                             (click)="switchResetInputFields(resetCriteria3.value)"
                                             [checked]="resetCriteriaInput==2">
                                         <label class="form-check-label">
-                                            Specific Value
+                                            Specific Buy
                                         </label>
 
 
@@ -670,7 +685,7 @@
                             </div> -->
 
 
-                            <div class="col-md-3 ">
+                            <div class="col-md-2 ">
                                 <label for="Exchange" class="p-2">Exchange</label>
                                 <div class="form-floating text-muted fs-6">
                                     <div class="form-check form-check-inline">
@@ -685,41 +700,52 @@
                                     </div><br /><br />
                                 </div>
                             </div>
-                            <div class="col-2"></div>
-                            <div class="col-2 mt-5" align="right">
+                            <div class="col-md-2 "></div>
+                            <div class="col-md-2 mt-4">
+                                <div style="width: 250px; " class=" input-group mb-3" *ngIf="isOnEdit">
+                                    <input type="text" class="form-control" placeholder=" (₹)" aria-label="Add Fund"
+                                        #fundInput aria-describedby="button-addon2">
+                                    <a class="btn btn-outline-secondary" pButton pRipple
+                                        style="background-color:#FB525A ;color: #fff;  " type="button"
+                                        id="button-addon2"
+                                        (click)="addTransactionFund(scriptData.id, fundInput.value)">Add
+                                        Fund</a>
+                                </div>
+                            </div>
+
+                            <div class="col-2 mt-4" align="right">
                                 <button type="button" pButton pRipple class="btn btn-outline-secondary"
                                     (click)="updateScript(scriptForm.value)" *ngIf="isOnEdit"
                                     style="background-color:#FB525A ;color: #fff; width: 90px; "><strong>Update</strong></button>
                             </div>
-                            <div class="col-1  mt-5" *ngIf="isOnView||isOnEdit">
-                                <button type="reset" (click)="viewMasterPage()"
-                                    style=" background-color:#FB525A ;color: #fff; width: 90px;"
-                                    class="btn btn-outline-secondary float-end"><strong>Back</strong></button>
-                            </div>
+
                         </div>
                         <div class="row">
-
-                            <div class="col-md-2">
-                                <label *ngIf="resetCriteriaInput==2 "
-                                    [hidden]="resetCriteriaInput==3 || resetCriteriaInput==1" for="Marginal Buy"
-                                    class="p-2">Marginal
-                                    Buy</label>
-                                <input type="text" name="marginalValue" #marginalValue="ngModel" [disabled]="isOnView"
-                                    [(ngModel)]="scriptData.marginalValue" *ngIf="resetCriteriaInput==2"
-                                    [hidden]="resetCriteriaInput==3 || resetCriteriaInput==1" class="form-control  "
+                            <div class="col-md-1"></div>
+                            <div class="col-md-2" style="margin-top: -30px;">
+                                <label *ngIf="resetCriteriaInput==1 "
+                                    [hidden]="resetCriteriaInput==2 || resetCriteriaInput==0" for="Marginal Buy"
+                                    class="p-2">Marginal Buy </label>
+                                <input style="width:60%" type="text" name="marginalValue" #marginalValue="ngModel"
+                                    [disabled]="isOnView" [(ngModel)]="scriptData.marginalValue"
+                                    *ngIf="resetCriteriaInput==1"
+                                    [hidden]="resetCriteriaInput==2 || resetCriteriaInput==0" class="form-control  "
                                     placeholder="Enter Marginal Value">
-
-                                <label *ngIf="resetCriteriaInput==3"
-                                    [hidden]="resetCriteriaInput==2 || resetCriteriaInput==1" for="Specific Buy"
+                            </div>
+                            <div class="col-md-2" style="margin-top: -30px; margin-left: -69px;">
+                                <label *ngIf="resetCriteriaInput==2"
+                                    [hidden]="resetCriteriaInput==1 || resetCriteriaInput==0" for="Specific Buy"
                                     class="p-2">Specific
-                                    Buy</label>
-                                <input type="text" name="specificValue" #specificValue="ngModel" [disabled]="isOnView"
-                                    [(ngModel)]="scriptData.specificValue"
-                                    [hidden]="resetCriteriaInput==2 || resetCriteriaInput==1"
-                                    *ngIf="resetCriteriaInput==3" class="form-control "
+                                    Value</label>
+                                <input style="width:60%" type="text" name="specificValue" #specificValue="ngModel"
+                                    [disabled]="isOnView" [(ngModel)]="scriptData.specificValue"
+                                    [hidden]="resetCriteriaInput==1 || resetCriteriaInput==0"
+                                    *ngIf="resetCriteriaInput==2" class="form-control "
                                     placeholder="Enter Specific Value">
                             </div>
-                            <div class="col-md-2"></div>
+                            <div class="col-md-2">
+
+                            </div>
                             <!--STOP LOSS RADIO BUTTONS-->
                             <!-- <div class="col-md-2">
                                 <label *ngIf="stop_loss.value=='1' || stop_loss_input==1 " [hidden]="stop_loss_input==2"
@@ -755,8 +781,23 @@
                             [globalFilterFields]="['start_date','start_time','orderType','market_rate,buy_target,sell_target,quantity_balance,script_fund_balance,profit_loss']"
                             sortField="" [sortOrder]="-1">
                             <ng-template pTemplate="caption">
-                                <div class="d-flex justify-content-between ">
-                                    <p class="fs-5 mt-2">View Stock Details</p>
+                                <div class="row">
+                                    <div class="col-md-9">
+                                        <div class="d-flex justify-content-between">
+                                            <p class="fs-5 mt-2"> View Stock Details</p>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3 ">
+                                        <div class="d-flex justify-content-between">
+                                            <strong>
+                                                <h1 style=" color: rgb(2, 114, 2);" class="fs-5 mt-2">
+                                                    Total Profit :- {{scriptProfit.profit| number : '1.2-2'}}
+                                                </h1>
+
+                                            </strong>
+                                        </div>
+                                    </div>
+
                                 </div>
                             </ng-template>
                             <ng-template pTemplate="header">

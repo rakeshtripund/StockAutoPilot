@@ -202,7 +202,10 @@
                         <ng-template pTemplate="body" let-todaysList>
                             <tr>
                                 <td class="text-center">{{todaysList.scriptId}}</td>
-                                <td class="text-center">{{todaysList.scriptName}}</td>
+                                <td class="text-center">{{todaysList.scriptName}}{{todaysList.sm2sell==1?"*":""}}
+
+
+                                </td>
                                 <td class="text-center">{{todaysList.orderDate | date:'dd/MM/yyyy'}}</td>
                                 <td class="text-center"><span
                                         [class]="'customer-badge status-' + todaysList.orderType">{{todaysList.orderType}}</span>

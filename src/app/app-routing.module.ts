@@ -7,7 +7,6 @@ import { AuthGuard } from './Services/auth.guard';
 import { TransactionComponent } from './transaction/transaction.component';
 
 const routes: Routes = [
-  { path: '', redirectTo: 'StockAutoPilotLogin', pathMatch: 'full' },
   { path: 'StockAutoPilotLogin', component: LoginComponent },
   // { path: 'StockAutoPilot', canActivate: [AuthGuard], component: HomeComponent },
   // { path: 'TransactionReport', canActivate: [AuthGuard], component: TransactionComponent },

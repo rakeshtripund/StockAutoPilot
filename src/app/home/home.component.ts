@@ -6,6 +6,7 @@ import { timer } from 'rxjs';
 import { HttpClient, HttpParams, HttpXsrfTokenExtractor, } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { Router } from '@angular/router';
+import { environment } from '../environments/environment';
 
 @Component({
   selector: 'app-home',
@@ -48,6 +49,7 @@ export class HomeComponent {
   rejectFlag: boolean = true
   addFormResetInput: any
   notificationList: any
+  scriptProfit: any
 
 
   constructor(private http: HttpClient, private confirmationService: ConfirmationService, public router: Router, private messageService: MessageService) { }
@@ -119,8 +121,9 @@ export class HomeComponent {
     this.confirmationService.confirm({
       message: `Are you sure you want to Add Script?`,
       accept: () => {
-        this.postData("http://127.0.0.1:5123/InsertScript", formdata).subscribe(data => {
+        this.postData(environment.baseUrl + "InsertScript", formdata).subscribe(data => {
           console.log(data);
+          this.messageService.add({ severity: 'success', summary: "Script Added  Successfully" });
           if (data == "Success") {
             this.closeNav();
             this.scriptData = {};
@@ -132,6 +135,7 @@ export class HomeComponent {
                 500
             })
           }
+
           else {
             console.log(data)
           }
@@ -140,6 +144,11 @@ export class HomeComponent {
             console.log(error)
             localStorage.removeItem("token")
             this.router.navigate(["/StockAutoPilotLogin"])
+          }
+          else if (error.status == 500) {
+            console.log(error.error.Error)
+            this.messageService.add({ severity: 'error', summary: "500: Internal Server Error", detail: error.error.Error });
+
           }
         });
       },
@@ -157,7 +166,7 @@ export class HomeComponent {
 
   // get all script details
   getAllScripts() {
-    this.getData("http://127.0.0.1:5123/GetAllScripts").subscribe(data => {
+    this.getData(environment.baseUrl + "GetAllScripts").subscribe(data => {
       this.scriptsList = data
       this.allScriptsList = data
       console.log(this.scriptsList)
@@ -187,6 +196,11 @@ export class HomeComponent {
         console.log(error)
         this.router.navigate(["/StockAutoPilotLogin"])
       }
+      else if (error.status == 500) {
+        console.log(error.error.Error)
+        this.messageService.add({ severity: 'error', summary: "500: Internal Server Error", detail: error.error.Error });
+
+      }
     })
   }
 
@@ -206,6 +220,7 @@ export class HomeComponent {
     this.isOnEdit = true
   }
   viewMasterPage() {
+    this.getAllScripts()
     this.isOnEdit = false
     this.isOnView = false
     this.scriptData = {}
@@ -217,7 +232,7 @@ export class HomeComponent {
   //   this.confirmationService.confirm({
   //     message: `Are you sure you want to Start ${scriptName} Script?`,
   //     accept: () => {
-  //       this.getData(`http://127.0.0.1:5123/StartProgram/${id}`).subscribe(data => {
+  //       this.getData(`http://127.0.0.1:8001/StartProgram/${id}`).subscribe(data => {
   //       }, error => {
   //         if (error.status == 401) {
   //           console.log(error)
@@ -229,7 +244,7 @@ export class HomeComponent {
   //   });
   // }
   startProgram() {
-    this.getData(`http://127.0.0.1:5123/StartProgram`).subscribe(data => {
+    this.getData(environment.baseUrl + "StartProgram").subscribe(data => {
       this.notificationList = data
       if (!this.notificationList.message) {
         console.log("Notification list", this.notificationList)
@@ -239,7 +254,7 @@ export class HomeComponent {
           this.messageService.add({ severity: 'success', summary: notification.scriptName, detail: notification.message });
         }
       }
-      this.getData("http://127.0.0.1:5123/updateScriptsCurrentPrice").subscribe(data => {
+      this.getData(environment.baseUrl + "updateScriptsCurrentPrice").subscribe(data => {
         setTimeout(() => {
           this.getAllScripts();
         }, 500)
@@ -248,6 +263,11 @@ export class HomeComponent {
       if (error.status == 401) {
         console.log(error)
         this.router.navigate(["/StockAutoPilotLogin"])
+      }
+      else if (error.status == 500) {
+        console.log(error.error.Error)
+        this.messageService.add({ severity: 'error', summary: "500: Internal Server Error", detail: error.error.Error });
+
       }
     })
   }
@@ -293,12 +313,18 @@ export class HomeComponent {
       icon: 'pi pi-exclamation-triangle',
       accept: () => {
 
-        this.putData("http://127.0.0.1:5123/UpdateScriptById", scriptForm).subscribe(data => {
+        this.putData(environment.baseUrl + "UpdateScriptById", scriptForm).subscribe(data => {
           this.getAllScripts();
+          this.messageService.add({ severity: 'success', summary: "Updated  Successfully" });
         }, error => {
           if (error.status == 401) {
             console.log(error)
             this.router.navigate(["/StockAutoPilotLogin"])
+          }
+          else if (error.status == 500) {
+            console.log(error.error.Error)
+            this.messageService.add({ severity: 'error', summary: "500: Internal Server Error", detail: error.error.Error });
+
           }
         })
         this.resetCriteriaInput = ""
@@ -353,13 +379,18 @@ export class HomeComponent {
   //code for activeflag update
   updateStatus(id: any, status: any) {
     let data = { scriptId: id, activeStatus: status }
-    this.postData("http://127.0.0.1:5123/UpdateActiveStatus", data).subscribe(response => {
+    this.postData(environment.baseUrl + "UpdateActiveStatus", data).subscribe(response => {
       console.log(response)
     }, error => {
       if (error.status == 401) {
         console.log(error)
         this.router.navigate(["/StockAutoPilotLogin"])
       }
+      else if (error.status == 500) {
+        console.log(error.error.Error)
+        this.messageService.add({ severity: 'error', summary: "500: Internal Server Error", detail: error.error.Error });
+      }
+
     })
     setTimeout(() => {
       this.getAllScripts(),
@@ -371,59 +402,76 @@ export class HomeComponent {
   //get particular script by id for view and edit form
   getScriptById(id: any, mode: any) {
 
-    this.getData(`http://127.0.0.1:5123/GetScriptById/${id}`).subscribe(data => {
+    this.getData(`${environment.baseUrl}GetScriptById/${id}`).subscribe(data => {
       console.log(data)
       this.scriptData = data
       this.resetCriteriaInput = this.scriptData.resetCriteria
       this.stop_loss_input = this.scriptData.stop_loss
       this.getTransactionById(id)
       this.getProfitByScriptById(id)
+      if (mode == 1) {
+        this.isOnView = true
+      }
+      else if (mode == 2) {
+        this.isOnEdit = true
+        // this.openNav();
+      }
     }, error => {
       if (error.status == 401) {
         console.log(error)
         this.router.navigate(["/StockAutoPilotLogin"])
       }
+      else if (error.status == 500) {
+        console.log(error.error.Error)
+        this.messageService.add({ severity: 'error', summary: "500: Internal Server Error", detail: error.error.Error });
+
+      }
     })
 
-    if (mode == 1) {
-      this.isOnView = true
-    }
-    else if (mode == 2) {
-      this.isOnEdit = true
-      // this.openNav();
-    }
+
 
   }
   // to get all script code for dropdown
   getAlllScriptCodes() {
-    this.getData("http://127.0.0.1:5123/GetAllScriptCode").subscribe(data => {
+    this.getData(environment.baseUrl + "GetAllScriptCode").subscribe(data => {
       this.scriptCodes = data
     }, error => {
       if (error.status == 401) {
         console.log(error)
         this.router.navigate(["/StockAutoPilotLogin"])
       }
+      else if (error.status == 500) {
+        console.log(error.error.Error)
+        this.messageService.add({ severity: 'error', summary: "500: Internal Server Error", detail: error.error.Error });
+      }
     })
   }
 
   getAllStatusCodes() {
-    this.getData("http://127.0.0.1:5123/GetAllScriptCode").subscribe(data => {
+    this.getData(environment.baseUrl + "GetAllScriptCode").subscribe(data => {
       this.statusCodes = data
     }, error => {
       if (error.status == 401) {
         console.log(error)
         this.router.navigate(["/StockAutoPilotLogin"])
       }
+      else if (error.status == 500) {
+        console.log(error.error.Error)
+        this.messageService.add({ severity: 'error', summary: "500: Internal Server Error", detail: error.error.Error });
+
+      }
     })
   }
   //get transactions details by id
   getTransactionById(id: any) {
 
-    this.getData(`http://127.0.0.1:5123/getTransactionById/${id}`).subscribe(data => {
+    this.getData(`${environment.baseUrl}getTransactionById/${id}`).subscribe(data => {
       this.transactionData = data
       for (let transaction of this.transactionData) {
         transaction.orderDate = new Date(transaction.orderDate)
-        transaction.orderDate = (transaction.orderDate).toISOString();
+        console.log(transaction.orderDate)
+        transaction.orderDate = (transaction.orderDate).toUTCString() + "+0530";
+        console.log(transaction.orderDate)
         if (transaction.orderType == 1) {
           transaction.orderType = "Buy"
         }
@@ -437,13 +485,18 @@ export class HomeComponent {
         console.log(error)
         this.router.navigate(["/StockAutoPilotLogin"])
       }
+      else if (error.status == 500) {
+        console.log(error.error.Error)
+        this.messageService.add({ severity: 'error', summary: "500: Internal Server Error", detail: error.error.Error });
+
+      }
     })
 
   }
 
   //get current price by script id
   getCurrentPriceByScriptId(id: any) {
-    this.getData(`http://127.0.0.1:5123/getCurrentpriceByscriptId/${id}`).subscribe(data => {
+    this.getData(`${environment.baseUrl}getCurrentpriceByscriptId/${id}`).subscribe(data => {
       this.CurrentPriceData = data
       console.log(data);
     }, error => {
@@ -451,13 +504,19 @@ export class HomeComponent {
         console.log(error)
         this.router.navigate(["/StockAutoPilotLogin"])
       }
+      else if (error.status == 500) {
+        console.log(error.error.Error)
+        this.messageService.add({ severity: 'error', summary: "500: Internal Server Error", detail: error.error.Error });
+
+      }
     })
 
   }
 
   // delete script by id
   delete(id: any) {
-    this.getData(`http://127.0.0.1:5123/GetScriptById/${id}`).subscribe(data => {
+
+    this.getData(`${environment.baseUrl}getScriptById/${id}`).subscribe(data => {
       this.scriptData = data
       this.confirmationService.confirm({
 
@@ -467,10 +526,12 @@ export class HomeComponent {
             .set("qty", this.scriptData.quantityBalance)
             .set("scriptName", this.scriptData.scriptName)
             .set("status", this.scriptData.activeFlag)
-          this.deleteData("http://127.0.0.1:5123/DeleteScriptById", params).subscribe(data => {
+          this.deleteData(environment.baseUrl + "DeleteScriptById", params).subscribe(data => {
             setTimeout(() => {
               this.getAllScripts();
             }, 500);
+            this.messageService.add({ severity: 'success', summary: "Script Deleted Successfully" });
+
             console.log(data)
           })
         }
@@ -479,6 +540,11 @@ export class HomeComponent {
       if (error.status == 401) {
         console.log(error)
         this.router.navigate(["/StockAutoPilotLogin"])
+      }
+      else if (error.status == 500) {
+        console.log(error.error.Error)
+        this.messageService.add({ severity: 'error', summary: "500: Internal Server Error", detail: error.error.Error });
+
       }
     })
   }
@@ -496,7 +562,7 @@ export class HomeComponent {
     this.confirmationService.confirm({
       message: msg,
       accept: () => {
-        this.getDataWithParams("http://127.0.0.1:5123/UpdateScriptStatusById", params).subscribe(data => {
+        this.getDataWithParams(environment.baseUrl + "UpdateScriptStatusById", params).subscribe(data => {
           setTimeout(() => {
             this.getAllScripts();
           }, 500);
@@ -504,6 +570,10 @@ export class HomeComponent {
           if (error.status == 401) {
             console.log(error)
             this.router.navigate(["/StockAutoPilotLogin"])
+          }
+          else if (error.status == 500) {
+            console.log(error.error.Error)
+            this.messageService.add({ severity: 'error', summary: "500: Internal Server Error", detail: error.error.Error });
           }
         })
       }
@@ -513,12 +583,17 @@ export class HomeComponent {
   // code  to get current price for selected script 
   getCurrentPriceForSelectedScript(scriptName: any) {
     const params = new HttpParams().set("code", scriptName.code)
-    this.getDataWithParams("http://127.0.0.1:5123/currentPriceForSelectedScript", params).subscribe(data => {
+    this.getDataWithParams(environment.baseUrl + "currentPriceForSelectedScript", params).subscribe(data => {
       this.selectedScriptCP = data
     }, error => {
       if (error.status == 401) {
         console.log(error)
         this.router.navigate(["/StockAutoPilotLogin"])
+      }
+      else if (error.status == 500) {
+        console.log(error.error.Error)
+        this.messageService.add({ severity: 'error', summary: "500: Internal Server Error", detail: error.error.Error });
+
       }
     })
   }
@@ -526,12 +601,17 @@ export class HomeComponent {
   // CODE FOR  GET PROFIT BY SCRIPT ID
 
   getProfitByScriptById(id: any) {
-    this.getData(`http://127.0.0.1:5123/getProfitByScriptId/${id}`).subscribe(data => {
-      console.log(data);
+    this.getData(`${environment.baseUrl}getProfitByScriptId/${id}`).subscribe(data => {
+      this.scriptProfit = data
     }, error => {
       if (error.status == 401) {
         console.log(error)
         this.router.navigate(["/StockAutoPilotLogin"])
+      }
+      else if (error.status == 500) {
+        console.log(error.error.Error)
+        this.messageService.add({ severity: 'error', summary: "500: Internal Server Error", detail: error.error.Error });
+
       }
     })
   }
@@ -562,6 +642,41 @@ export class HomeComponent {
   getSelectedScript(scriptName: string) {
     console.log(scriptName)
   }
+
+  addTransactionFund(id: number, fund: any) {
+    let data = { scriptId: id, scriptFund: fund }
+    this.postData(environment.baseUrl + "addScriptFund", data).subscribe(response => {
+      console.log(this.scriptData.id)
+      this.getScriptById(this.scriptData.id, 2)
+
+      this.messageService.add({ severity: 'success', summary: "Fund Added Successfully" });
+    }, error => {
+      if (error.status == 401) {
+        console.log(error)
+        this.router.navigate(["/StockAutoPilotLogin"])
+      }
+      else if (error.status == 500) {
+        console.log(error.error.Error)
+        this.messageService.add({ severity: 'error', summary: "500: Internal Server Error", detail: error.error.Error });
+      }
+
+    })
+
+  }
+
+  // getScriptProfit() {
+  //   this.getData("http://127.0.0.1:8001/getScriptProfit").subscribe(data => {
+  //     console.log(data)
+  //     this.scriptProfit = data
+  //     console.log()
+  //   }, error => {
+  //     if (error.status == 500) {
+  //       console.log(error.error.message)
+  //       this.messageService.add({ severity: 'error', summary: "Exception", detail: error.error.Error });
+  //     }
+
+  //   })
+  // }
 
   getData(url: string,) {
     return this.http.get(url);
